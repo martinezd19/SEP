@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- generator="Joomla! - Open Source Content Management" -->
+<feed xml:lang="en-gb">
+    <title type="text">AIO Inspections - Home</title>
+    <subtitle type="text"></subtitle>
+    <link rel="alternate" type="text/html" href="http://localhost:8012"/>
+    <id>http://localhost:8012/joomla/index.php</id>
+    <updated>2016-06-16T21:36:12+00:00</updated>
+    <author>
+        <name>All in One Home Inspections</name>
+    </author>
+    <generator uri="http://joomla.org">Joomla! - Open Source Content Management</generator>
+    <link rel="self" type="application/atom+xml"
+          href="http://localhost:8012/joomla/index.php?format=feed&amp;type=atom"/>
+    <entry>
+        <title>Pintex</title>
+        <link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/welcome"/>
+        <published>2014-05-02T17:27:00+00:00</published>
+        <updated>2014-05-02T17:27:00+00:00</updated>
+        <id>http://localhost:8012/joomla/index.php/welcome</id>
+        <author>
+            <name>Super User</name>
+        </author>
+        <summary type="html">&lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.&lt;/p&gt;
+        </summary>
+        <content type="html">&lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.&lt;/p&gt;
+        </content>
+        <category term="Home"/>
+    </entry>
+    <entry>
+        <title>Creativity</title>
+        <link rel="alternate" type="text/html"
+              href="http://localhost:8012/joomla/index.php/the-best-way-to-show-your-works-to-the-world/123-responsive-design"/>
+        <published>2015-04-21T06:56:30+00:00</published>
+        <updated>2015-04-21T06:56:30+00:00</updated>
+        <id>http://localhost:8012/joomla/index.php/the-best-way-to-show-your-works-to-the-world/123-responsive-design
+        </id>
+        <author>
+            <name>Super User</name>
+        </author>
+        <summary type="html">&lt;p&gt;&lt;img src=&quot;http://localhost:8012/joomla/images/icon-1.png&quot; alt=&quot;&quot;
+            /&gt;&lt;/p&gt;
+            &lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut
+            labore.&lt;/p&gt;
+        </summary>
+        <content type="html">&lt;p&gt;&lt;img src=&quot;http://localhost:8012/joomla/images/icon-1.png&quot; alt=&quot;&quot;
+            /&gt;&lt;/p&gt;
+            &lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut
+            labore.&lt;/p&gt;
+        </content>
+        <category term="Home"/>
+    </entry>
+    <entry>
+        <title>Collaboration</title>
+        <link rel="alternate" type="text/html"
+              href="http://localhost:8012/joomla/index.php/the-best-way-to-show-your-works-to-the-world/124-clean-code"/>
+        <published>2015-04-21T06:56:30+00:00</published>
+        <updated>2015-04-21T06:56:30+00:00</updated>
+        <id>http://localhost:8012/joomla/index.php/the-best-way-to-show-your-works-to-the-world/124-clean-code</id>
+        <author>
+            <name>Super User</name>
+        </author>
+        <summary type="html">&lt;p&gt;&lt;img src=&quot;http://localhost:8012/joomla/images/icon-2.png&quot; alt=&quot;&quot;
+            /&gt;&lt;/p&gt;
+            &lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut
+            labore.&lt;/p&gt;
+        </summary>
+        <content type="html">&lt;p&gt;&lt;img src=&quot;http://localhost:8012/joomla/images/icon-2.png&quot; alt=&quot;&quot;
+            /&gt;&lt;/p&gt;
+            &lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut
+            labore.&lt;/p&gt;
+        </content>
+        <category term="Home"/>
+    </entry>
+    <entry>
+        <title>Connectivity</title>
+        <link rel="alternate" type="text/html"
+              href="http://localhost:8012/joomla/index.php/the-best-way-to-show-your-works-to-the-world/125-423-icons"/>
+        <published>2015-04-21T06:56:30+00:00</published>
+        <updated>2015-04-21T06:56:30+00:00</updated>
+        <id>http://localhost:8012/joomla/index.php/the-best-way-to-show-your-works-to-the-world/125-423-icons</id>
+        <author>
+            <name>Super User</name>
+        </author>
+        <summary type="html">&lt;p&gt;&lt;img src=&quot;http://localhost:8012/joomla/images/icon-3.png&quot; alt=&quot;&quot;
+            /&gt;&lt;/p&gt;
+            &lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut
+            labore.&lt;/p&gt;
+        </summary>
+        <content type="html">&lt;p&gt;&lt;img src=&quot;http://localhost:8012/joomla/images/icon-3.png&quot; alt=&quot;&quot;
+            /&gt;&lt;/p&gt;
+            &lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut
+            labore.&lt;/p&gt;
+        </content>
+        <category term="Home"/>
+    </entry>
+</feed>

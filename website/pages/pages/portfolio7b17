@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- generator="Joomla! - Open Source Content Management" -->
+<feed xmlns="http://www.w3.org/2005/Atom"  xml:lang="en-gb">
+	<title type="text">AIO Inspections - Portfolio</title>
+	<subtitle type="text"></subtitle>
+	<link rel="alternate" type="text/html" href="http://localhost:8012"/>
+	<id>http://localhost:8012/joomla/index.php/pages/portfolio</id>
+	<updated>2016-06-16T21:42:09+00:00</updated>
+	<author>
+		<name>All in One Home Inspections</name>
+	</author>
+	<generator uri="http://joomla.org">Joomla! - Open Source Content Management</generator>
+	<link rel="self" type="application/atom+xml" href="http://localhost:8012/joomla/index.php/pages/portfolio?format=feed&amp;type=atom"/>
+	<entry>
+		<title>Proin dolor metus</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/pages/portfolio/67-proin-dolor-metus"/>
+		<published>2014-05-02T17:35:27+00:00</published>
+		<updated>2014-05-02T17:35:27+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/pages/portfolio/67-proin-dolor-metus</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</summary>
+		<content type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</content>
+		<category term="Our Latest Works" />
+	</entry>
+	<entry>
+		<title>Quisque est velit</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/pages/portfolio/71-quisque-est-velit"/>
+		<published>2014-05-02T17:35:27+00:00</published>
+		<updated>2014-05-02T17:35:27+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/pages/portfolio/71-quisque-est-velit</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</summary>
+		<content type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</content>
+		<category term="Our Latest Works" />
+	</entry>
+	<entry>
+		<title>Curabitur ac ante</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/pages/portfolio/70-curabitur-ac-ante"/>
+		<published>2014-05-02T17:35:27+00:00</published>
+		<updated>2014-05-02T17:35:27+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/pages/portfolio/70-curabitur-ac-ante</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</summary>
+		<content type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</content>
+		<category term="Our Latest Works" />
+	</entry>
+	<entry>
+		<title>Maecenas non odio</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/pages/portfolio/69-maecenas-non-odio"/>
+		<published>2014-05-02T17:35:27+00:00</published>
+		<updated>2014-05-02T17:35:27+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/pages/portfolio/69-maecenas-non-odio</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</summary>
+		<content type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</content>
+		<category term="Our Latest Works" />
+	</entry>
+	<entry>
+		<title>Fusce posuere lacus</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/pages/portfolio/68-fusce-posuere-lacus"/>
+		<published>2014-05-02T17:35:27+00:00</published>
+		<updated>2014-05-02T17:35:27+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/pages/portfolio/68-fusce-posuere-lacus</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</summary>
+		<content type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</content>
+		<category term="Our Latest Works" />
+	</entry>
+	<entry>
+		<title>In hac habitasse</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/pages/portfolio/66-in-hac-habitasse"/>
+		<published>2014-05-02T17:35:27+00:00</published>
+		<updated>2014-05-02T17:35:27+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/pages/portfolio/66-in-hac-habitasse</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</summary>
+		<content type="html">&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tristique orci ac sem.&lt;/p&gt;
+</content>
+		<category term="Our Latest Works" />
+	</entry>
+</feed>

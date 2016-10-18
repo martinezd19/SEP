@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- generator="Joomla! - Open Source Content Management" -->
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>AIO Inspections - Blog</title>
+		<description><![CDATA[]]></description>
+		<link>http://localhost:8012/joomla/index.php/blog/51-elit-sed-do-eiusmod-tempor-2</link>
+		<lastBuildDate>Thu, 16 Jun 2016 21:40:16 +0000</lastBuildDate>
+		<generator>Joomla! - Open Source Content Management</generator>
+		<atom:link rel="self" type="application/rss+xml" href="http://localhost:8012/joomla/index.php/blog/51-elit-sed-do-eiusmod-tempor-2?format=feed&amp;type=rss"/>
+		<language>en-gb</language>
+		<item>
+			<title>Vestibulum commodo mollis</title>
+			<link>http://localhost:8012/joomla/index.php/blog/51-elit-sed-do-eiusmod-tempor-2/15-vestibulum-commodo-mollis</link>
+			<guid isPermaLink="true">http://localhost:8012/joomla/index.php/blog/51-elit-sed-do-eiusmod-tempor-2/15-vestibulum-commodo-mollis</guid>
+			<description><![CDATA[<p>Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>
+]]></description>
+			<category>Elit sed do eiusmod tempor</category>
+			<pubDate>Fri, 25 Apr 2014 17:52:00 +0000</pubDate>
+		</item>
+	</channel>
+</rss>

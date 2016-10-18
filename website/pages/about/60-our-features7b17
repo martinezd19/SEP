@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- generator="Joomla! - Open Source Content Management" -->
+<feed xmlns="http://www.w3.org/2005/Atom"  xml:lang="en-gb">
+	<title type="text">AIO Inspections - About</title>
+	<subtitle type="text"></subtitle>
+	<link rel="alternate" type="text/html" href="http://localhost:8012"/>
+	<id>http://localhost:8012/joomla/index.php/about/60-our-features</id>
+	<updated>2016-06-16T22:07:38+00:00</updated>
+	<author>
+		<name>All in One Home Inspections</name>
+	</author>
+	<generator uri="http://joomla.org">Joomla! - Open Source Content Management</generator>
+	<link rel="self" type="application/atom+xml" href="http://localhost:8012/joomla/index.php/about/60-our-features?format=feed&amp;type=atom"/>
+	<entry>
+		<title>Donec sit amet eros</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/about/60-our-features/138-donec-sit-amet-eros"/>
+		<published>2015-04-22T13:52:54+00:00</published>
+		<updated>2015-04-22T13:52:54+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/about/60-our-features/138-donec-sit-amet-eros</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;img src=&quot;http://localhost:8012/joomla/images/features/icon-1.png&quot; alt=&quot;&quot; /&gt;
+&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tris
+tique orci ac sem. Duis ultricies phare
+tra magna. Donec accumsan malesuada orci. Donec sit amet eros. &lt;/p&gt;
+</summary>
+		<content type="html">&lt;img src=&quot;http://localhost:8012/joomla/images/features/icon-1.png&quot; alt=&quot;&quot; /&gt;
+&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tris
+tique orci ac sem. Duis ultricies phare
+tra magna. Donec accumsan malesuada orci. Donec sit amet eros. &lt;/p&gt;
+</content>
+		<category term="Our features" />
+	</entry>
+	<entry>
+		<title>Aenean auctor wisi</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/about/60-our-features/139-aenean-auctor-wisi"/>
+		<published>2015-04-22T13:52:54+00:00</published>
+		<updated>2015-04-22T13:52:54+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/about/60-our-features/139-aenean-auctor-wisi</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;img src=&quot;http://localhost:8012/joomla/images/features/icon-2.png&quot; alt=&quot;&quot; /&gt;
+&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tris
+tique orci ac sem. Duis ultricies phare
+tra magna. Donec accumsan malesuada orci. Donec sit amet eros. &lt;/p&gt;
+</summary>
+		<content type="html">&lt;img src=&quot;http://localhost:8012/joomla/images/features/icon-2.png&quot; alt=&quot;&quot; /&gt;
+&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tris
+tique orci ac sem. Duis ultricies phare
+tra magna. Donec accumsan malesuada orci. Donec sit amet eros. &lt;/p&gt;
+</content>
+		<category term="Our features" />
+	</entry>
+	<entry>
+		<title>Integer rutrum ante</title>
+		<link rel="alternate" type="text/html" href="http://localhost:8012/joomla/index.php/about/60-our-features/140-integer-rutrum-ante"/>
+		<published>2015-04-22T13:52:54+00:00</published>
+		<updated>2015-04-22T13:52:54+00:00</updated>
+		<id>http://localhost:8012/joomla/index.php/about/60-our-features/140-integer-rutrum-ante</id>
+		<author>
+			<name>Super User</name>
+		</author>
+		<summary type="html">&lt;img src=&quot;http://localhost:8012/joomla/images/features/icon-3.png&quot; alt=&quot;&quot; /&gt;
+&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tris
+tique orci ac sem. Duis ultricies phare
+tra magna. Donec accumsan malesuada orci. Donec sit amet eros. &lt;/p&gt;
+</summary>
+		<content type="html">&lt;img src=&quot;http://localhost:8012/joomla/images/features/icon-3.png&quot; alt=&quot;&quot; /&gt;
+&lt;p&gt;Morbi nunc odio, gravida at, cursus nec, luctus a, lorem. Maecenas tris
+tique orci ac sem. Duis ultricies phare
+tra magna. Donec accumsan malesuada orci. Donec sit amet eros. &lt;/p&gt;
+</content>
+		<category term="Our features" />
+	</entry>
+</feed>
