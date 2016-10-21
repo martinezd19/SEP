@@ -39,10 +39,12 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private final String PORT = "port";
     private final String USERNAME_FTP = "usernameftp";
     private final String PASSWORD_FTP = "passwordftp";
+    private boolean sqlPassShowToggle = false;
+    private boolean ftpPassShowToggle = false;
+    private boolean initialized = false;
     private GetSQL sql = null;
     private Preferences prefs = null;
     private Connection conn = null;
-    private Statement stmt = null;
     private boolean catUpdating = false;
     private int editId = -1;
     /**
@@ -95,31 +97,30 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             tabPane.setEnabledAt(0, false);
             tabPane.setEnabledAt(1, false);
             tabPane.setSelectedIndex(2);
+            initialized = true;
             return false;
         } else {
             JOptionPane.showMessageDialog(warningPane, "SQL Server Connection Succeeded", "Connection Success", JOptionPane.INFORMATION_MESSAGE);
             tabPane.setEnabledAt(0, true);
             tabPane.setEnabledAt(1, true);
             this.conn = sql.conn;
-            try {
-                stmt = conn.createStatement();
-                stmt.execute("USE fygarza_sep");
-            } catch (SQLException ex){
-                // handle any errors
-                System.out.println("SQLException: " + ex.getMessage());
-                System.out.println("SQLState: " + ex.getSQLState());
-                System.out.println("VendorError: " + ex.getErrorCode());
-            }
             updateAll();
+            initialized = true;
             return true;
         }
+    }
+    
+    private Statement createStatement() throws SQLException {
+        Statement stmt = conn.createStatement();
+        stmt.execute("USE fygarza_sep");
+        return stmt;
     }
     
     private void updateAll() throws SQLException {
         //Set categories
         catUpdating = true;
         setEnabledAllEdit(false);
-        ResultSet rs = stmt.executeQuery("SELECT DISTINCT category FROM inventory");
+        ResultSet rs = createStatement().executeQuery("SELECT DISTINCT category FROM inventory");
         categoryList.removeAllItems();
         categoryListEdit.removeAllItems();
         while(rs.next()) {
@@ -131,7 +132,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         catUpdating = false;
         //Set items
         selectItemComboBox.removeAllItems();
-        rs = stmt.executeQuery("SELECT title FROM inventory");
+        rs = createStatement().executeQuery("SELECT title FROM inventory");
         while(rs.next()) {
             selectItemComboBox.addItem(rs.getString("title"));
         }
@@ -145,13 +146,14 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         if(!enabled) {
             selectItemComboBox.setEnabled(true);
             searchByIDField.setEnabled(true);
+            searchByIDButton.setEnabled(true);
             jLabel26.setEnabled(true);
             jLabel27.setEnabled(true);
         }
     }
     
     private void populateData(int id) throws SQLException {
-        ResultSet rs = stmt.executeQuery("SELECT * FROM inventory WHERE id="+id);
+        ResultSet rs = createStatement().executeQuery("SELECT * FROM inventory WHERE id="+id);
         rs.next();
         titleFieldEdit.setText(rs.getString("title"));
         descriptionTextAreaEdit.setText(rs.getString("description"));
@@ -216,6 +218,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         jSeparator17 = new javax.swing.JSeparator();
         jSeparator18 = new javax.swing.JSeparator();
         deleteButton = new javax.swing.JButton();
+        searchByIDButton = new javax.swing.JButton();
         createPane = new javax.swing.JPanel();
         browseButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -266,6 +269,8 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         jLabel15 = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
         refreshButton = new javax.swing.JButton();
+        sqlShowPass = new javax.swing.JToggleButton();
+        ftpShowPass = new javax.swing.JToggleButton();
 
         fileChooser.setAcceptAllFileFilterUsed(false);
         fileChooser.setPreferredSize(new java.awt.Dimension(582, 582));
@@ -274,6 +279,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
 
         tabPane.setBackground(new java.awt.Color(255, 255, 255));
         tabPane.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tabPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabPaneStateChanged(evt);
+            }
+        });
 
         editPane.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -395,6 +405,14 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             }
         });
 
+        searchByIDButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        searchByIDButton.setText("Search");
+        searchByIDButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByIDButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout editPaneLayout = new javax.swing.GroupLayout(editPane);
         editPane.setLayout(editPaneLayout);
         editPaneLayout.setHorizontalGroup(
@@ -465,7 +483,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                 .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jSeparator18, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(20, Short.MAX_VALUE))))))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
             .addGroup(editPaneLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jLabel26)
@@ -475,18 +493,21 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 .addComponent(jLabel27)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(searchByIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(searchByIDButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         editPaneLayout.setVerticalGroup(
             editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editPaneLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(22, 22, 22)
                 .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectItemComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel26)
                     .addComponent(jLabel27)
-                    .addComponent(searchByIDField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
+                    .addComponent(searchByIDField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchByIDButton))
+                .addGap(17, 17, 17)
                 .addComponent(jSeparator15, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -574,6 +595,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
 
         titleField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         titleField.setToolTipText("Type title here");
+        titleField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                titleFieldFocusLost(evt);
+            }
+        });
         titleField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 titleFieldActionPerformed(evt);
@@ -697,7 +723,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                     .addComponent(jLabel4))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(titleField)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)))
                     .addGroup(createPaneLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(createPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -772,13 +798,13 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                 .addGap(18, 18, 18)
                                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addComponent(submitNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel16)
                 .addGap(18, 18, 18)
                 .addComponent(uploadProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Create new", createPane);
@@ -861,6 +887,22 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             }
         });
 
+        sqlShowPass.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        sqlShowPass.setText("Show Password");
+        sqlShowPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sqlShowPassActionPerformed(evt);
+            }
+        });
+
+        ftpShowPass.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        ftpShowPass.setText("Show Password");
+        ftpShowPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ftpShowPassActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout optionsPaneLayout = new javax.swing.GroupLayout(optionsPane);
         optionsPane.setLayout(optionsPaneLayout);
         optionsPaneLayout.setHorizontalGroup(
@@ -877,7 +919,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                     .addComponent(jLabel8))
                                 .addGap(18, 18, 18)
                                 .addComponent(prefSaveButtonSQL))
-                            .addComponent(setSQLPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(optionsPaneLayout.createSequentialGroup()
+                                .addComponent(setSQLPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(sqlShowPass))
                             .addComponent(setServerField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(jLabel7)
@@ -887,12 +932,15 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                             .addComponent(jLabel12)
                             .addComponent(setFTPUsernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel14)
-                            .addComponent(setFTPPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(optionsPaneLayout.createSequentialGroup()
-                                .addComponent(jLabel13)
-                                .addGap(243, 243, 243)
-                                .addComponent(prefSaveButtonFTP)))
-                        .addGap(0, 337, Short.MAX_VALUE))
+                                .addGroup(optionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(setFTPPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel13))
+                                .addGap(18, 18, 18)
+                                .addGroup(optionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(prefSaveButtonFTP)
+                                    .addComponent(ftpShowPass))))
+                        .addGap(0, 348, Short.MAX_VALUE))
                     .addComponent(jSeparator8))
                 .addContainerGap())
             .addGroup(optionsPaneLayout.createSequentialGroup()
@@ -916,31 +964,36 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setSQLPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setHostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
-                .addComponent(jLabel15)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setPortField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(optionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(prefSaveButtonFTP))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setFTPUsernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setFTPPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(refreshButton)
+                .addGroup(optionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(optionsPaneLayout.createSequentialGroup()
+                        .addComponent(setSQLPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(setHostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(setPortField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(optionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(prefSaveButtonFTP))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(setFTPUsernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(optionsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(setFTPPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftpShowPass))
+                        .addGap(18, 18, 18)
+                        .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(refreshButton))
+                    .addComponent(sqlShowPass))
                 .addContainerGap(95, Short.MAX_VALUE))
         );
 
@@ -980,6 +1033,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private void categoryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListActionPerformed
         if(!catUpdating && categoryList.getSelectedItem().equals("New Category")) {
             String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
+            if(newCategory == null || newCategory.trim().equals("")) {
+                categoryList.setSelectedIndex(0);
+                return;
+            }
             categoryList.addItem(newCategory);
             categoryList.setSelectedItem(newCategory);
         }
@@ -1002,19 +1059,24 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     }//GEN-LAST:event_titleFieldKeyTyped
 
     private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
+        if(isDuplicateTitle()) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_titleFieldActionPerformed
+
+    private boolean isDuplicateTitle() {
         try {
-            ResultSet rs = stmt.executeQuery("SELECT title FROM inventory WHERE title='" + titleField.getText() +"'");
-            if(rs.next()) {
-                JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-            }
+            ResultSet rs = createStatement().executeQuery("SELECT title FROM inventory WHERE title='" + titleField.getText() +"'");
+            return rs.next();
         } catch(SQLException ex) {
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+            return false;
         }
-    }//GEN-LAST:event_titleFieldActionPerformed
-
+    }
+    
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         FileFilter filter = new FileNameExtensionFilter(".png, .jpg, .jpeg", "png", "jpg", "jpeg");
         fileChooser.addChoosableFileFilter(filter);
@@ -1039,6 +1101,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         //Check that fields are valid
         if(titleField.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a title", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        if(isDuplicateTitle()) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
             submitNewButton.setEnabled(true);
             return;
         }
@@ -1081,9 +1148,9 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         try {
             String query = "INSERT INTO inventory (title,description,category,time_period,picture_path,num_available,num_rented,working) "
                 + "VALUES ('"+titleField.getText()+"','"+descriptionTextArea.getText()+"','"+(String)categoryList.getSelectedItem()+"',"
-                +Integer.parseInt((String)timePeriodCombo.getSelectedItem())+",'images/inventory/"+fileName+"',"+availableSpinner.getValue()
+                +Integer.parseInt((String)timePeriodCombo.getSelectedItem())+",'/images/inventory/"+fileName+"',"+availableSpinner.getValue()
                 +","+rentedSpinner.getValue()+","+working+")";
-            stmt.executeUpdate(query);
+            createStatement().executeUpdate(query);
         } catch(SQLException ex) {
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
@@ -1103,6 +1170,14 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 uploadPath, uploadFile, fileName);
         task.addPropertyChangeListener(this);
         task.execute();
+        try {
+            updateAll();
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
     }//GEN-LAST:event_submitNewButtonActionPerformed
   
     /**
@@ -1177,7 +1252,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private void titleFieldEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldEditActionPerformed
         try {
             
-            ResultSet rs = stmt.executeQuery("SELECT title FROM inventory WHERE title='" + titleField.getText() +"' AND id != "+editId);
+            ResultSet rs = createStatement().executeQuery("SELECT title FROM inventory WHERE title='" + titleField.getText() +"' AND id != "+editId);
             if(rs.next()) {
                 JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
             }
@@ -1206,50 +1281,29 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     }//GEN-LAST:event_descriptionTextAreaEditKeyTyped
 
     private void searchByIDFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIDFieldActionPerformed
-        int id = 0;
-        try {
-            id = Integer.parseInt((String)searchByIDField.getText().trim());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(warningPane, "Please enter a valid number ID", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT id FROM inventory WHERE id="+Integer.parseInt((String)searchByIDField.getText().trim()));
-            if(rs.next()) {
-                populateData(rs.getInt("id"));
-            } else {
-                JOptionPane.showMessageDialog(warningPane, "Invalid ID", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            return;
-        }
+        
     }//GEN-LAST:event_searchByIDFieldActionPerformed
 
     private void selectItemComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectItemComboBoxActionPerformed
         try {
-            ResultSet rs = stmt.executeQuery("SELECT id FROM inventory WHERE title='"+(String)selectItemComboBox.getSelectedItem()+"'");
+            ResultSet rs = createStatement().executeQuery("SELECT id FROM inventory WHERE title='"+(String)selectItemComboBox.getSelectedItem()+"'");
             if(rs.next()) {
                 populateData(rs.getInt("id"));
-            } else {
-                JOptionPane.showMessageDialog(warningPane, "Invalid ID", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch(SQLException ex) {
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            return;
-        }
+        }            
     }//GEN-LAST:event_selectItemComboBoxActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         //Delete image
+        boolean fullyDeleted  = true;
         String deletePath;
         try {
-            ResultSet rs = stmt.executeQuery("SELECT picture_path FROM inventory WHERE id="+editId);
+            ResultSet rs = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id="+editId);
             rs.next();
             deletePath = rs.getString("picture_path");
         } catch(SQLException ex) {
@@ -1270,6 +1324,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             int replyCode = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
                 JOptionPane.showMessageDialog(warningPane, "FTP Server refused connection", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
  
             boolean logged = ftp.login(username, password);
@@ -1277,11 +1332,13 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 // failed to login
                 ftp.disconnect();
                 JOptionPane.showMessageDialog(warningPane, "Could not login to server", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             
             boolean deleted = ftp.deleteFile(deletePath);
             if(!deleted) {
-                JOptionPane.showMessageDialog(warningPane, "Could not delete", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(warningPane, "Could not delete FTP", "Error", JOptionPane.ERROR_MESSAGE);
+                fullyDeleted = false;
             }
             
             ftp.enterLocalPassiveMode();
@@ -1292,14 +1349,20 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         
         //Delete SQL
         try {
-            stmt.executeUpdate("DELETE FROM inventory WHERE id="+editId);
+            createStatement().executeUpdate("DELETE FROM inventory WHERE id="+editId);
         } catch(SQLException ex) {
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            JOptionPane.showMessageDialog(warningPane, "Unable to delete", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(warningPane, "Could not delete SQL", "Error", JOptionPane.ERROR_MESSAGE);
             return;
+        }
+        
+        if(fullyDeleted) {
+            JOptionPane.showMessageDialog(warningPane, "Item fully deleted", "Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
+        } else { 
+            JOptionPane.showMessageDialog(warningPane, "Failed to delete image. However, server entry was still removed", "Deletion Partially Successful", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -1310,6 +1373,67 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private void setServerFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setServerFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_setServerFieldActionPerformed
+
+    private void sqlShowPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sqlShowPassActionPerformed
+        if(!sqlPassShowToggle) {
+            setSQLPasswordField.setEchoChar((char)0);
+            sqlPassShowToggle = !sqlPassShowToggle;
+        } else {
+            setSQLPasswordField.setEchoChar('*');
+            sqlPassShowToggle = !sqlPassShowToggle;
+        }
+    }//GEN-LAST:event_sqlShowPassActionPerformed
+
+    private void ftpShowPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftpShowPassActionPerformed
+        if(!ftpPassShowToggle) {
+            setFTPPasswordField.setEchoChar((char)0);
+            ftpPassShowToggle = !ftpPassShowToggle;
+        } else {
+            setFTPPasswordField.setEchoChar('*');
+            ftpPassShowToggle = !ftpPassShowToggle;
+        }
+    }//GEN-LAST:event_ftpShowPassActionPerformed
+
+    private void searchByIDButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByIDButtonActionPerformed
+        int id = 0;
+        try {
+            id = Integer.parseInt((String)searchByIDField.getText().trim());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(warningPane, "Please enter a valid number ID", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        try {
+            ResultSet rs = createStatement().executeQuery("SELECT id FROM inventory WHERE id="+Integer.parseInt((String)searchByIDField.getText().trim()));
+            if(rs.next()) {
+                populateData(rs.getInt("id"));
+            } else {
+                JOptionPane.showMessageDialog(warningPane, "Invalid ID", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }//GEN-LAST:event_searchByIDButtonActionPerformed
+
+    private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
+        if(isDuplicateTitle()) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_titleFieldFocusLost
+
+    private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
+        try {
+            if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+                updateAll();
+            }
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }//GEN-LAST:event_tabPaneStateChanged
 
     /**
      * @param args the command line arguments
@@ -1361,6 +1485,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JLabel filePathText;
     private javax.swing.JLabel filePathTextEdit;
+    private javax.swing.JToggleButton ftpShowPass;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1414,6 +1539,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private javax.swing.JButton refreshButton;
     private javax.swing.JSpinner rentedSpinner;
     private javax.swing.JSpinner rentedSpinnerEdit;
+    private javax.swing.JButton searchByIDButton;
     private javax.swing.JTextField searchByIDField;
     private javax.swing.JComboBox<String> selectItemComboBox;
     private javax.swing.JPasswordField setFTPPasswordField;
@@ -1423,6 +1549,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private javax.swing.JPasswordField setSQLPasswordField;
     private javax.swing.JTextField setSQLUsernameField;
     private javax.swing.JTextField setServerField;
+    private javax.swing.JToggleButton sqlShowPass;
     private javax.swing.JButton submitNewButton;
     private javax.swing.JTabbedPane tabPane;
     private javax.swing.JComboBox<String> timePeriodCombo;
