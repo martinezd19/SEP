@@ -6,6 +6,7 @@
 package SQL;
 
 import java.awt.Component;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -17,8 +18,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.prefs.Preferences;
+import javax.imageio.ImageIO;
 import javax.swing.ComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -249,6 +253,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         jSeparator16 = new javax.swing.JSeparator();
         jLabel28 = new javax.swing.JLabel();
         workingComboBox = new javax.swing.JComboBox<>();
+        imageLabel = new javax.swing.JLabel();
         optionsPane = new javax.swing.JPanel();
         setSQLUsernameField = new javax.swing.JTextField();
         setServerField = new javax.swing.JTextField();
@@ -674,6 +679,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         workingComboBox.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         workingComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Working", "Nonworking" }));
 
+        imageLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        imageLabel.setText("No Image");
+
         javax.swing.GroupLayout createPaneLayout = new javax.swing.GroupLayout(createPane);
         createPane.setLayout(createPaneLayout);
         createPaneLayout.setHorizontalGroup(
@@ -710,7 +719,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rentedSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator6))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 2, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(createPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -723,9 +732,9 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                     .addComponent(jLabel4))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(titleField)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)))
                     .addGroup(createPaneLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 19, Short.MAX_VALUE)
                         .addGroup(createPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(createPaneLayout.createSequentialGroup()
                                 .addComponent(jLabel28)
@@ -736,12 +745,14 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                 .addComponent(jSeparator16, javax.swing.GroupLayout.Alignment.TRAILING)))))
                 .addGap(20, 20, 20))
             .addGroup(createPaneLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
+                .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(createPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(submitNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(uploadProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(86, 86, 86))
         );
         createPaneLayout.setVerticalGroup(
             createPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -798,13 +809,16 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                 .addGap(18, 18, 18)
                                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                .addComponent(submitNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel16)
-                .addGap(18, 18, 18)
-                .addComponent(uploadProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addGroup(createPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(createPaneLayout.createSequentialGroup()
+                        .addComponent(submitNewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel16)
+                        .addGap(18, 18, 18)
+                        .addComponent(uploadProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Create new", createPane);
@@ -1030,40 +1044,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         }
     }//GEN-LAST:event_prefSaveButtonSQLActionPerformed
 
-    private void categoryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListActionPerformed
-        if(!catUpdating && categoryList.getSelectedItem().equals("New Category")) {
-            String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
-            if(newCategory == null || newCategory.trim().equals("")) {
-                categoryList.setSelectedIndex(0);
-                return;
-            }
-            categoryList.addItem(newCategory);
-            categoryList.setSelectedItem(newCategory);
-        }
-    }//GEN-LAST:event_categoryListActionPerformed
-
-    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
-        String text = descriptionTextArea.getText();
-        if(text.length() > 150) {
-            descriptionTextArea.setText(text.substring(0, text.length() - 1));
-            JOptionPane.showMessageDialog(warningPane, "Please limit descriptions to 150 characters", "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_descriptionTextAreaKeyTyped
-
-    private void titleFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleFieldKeyTyped
-        String text = titleField.getText();
-        if(text.length() > 20) {
-            titleField.setText(text.substring(0, text.length() - 1));
-            JOptionPane.showMessageDialog(warningPane, "Please limit titles to 20 characters", "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_titleFieldKeyTyped
-
-    private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
-        if(isDuplicateTitle()) {
-            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_titleFieldActionPerformed
-
     private boolean isDuplicateTitle() {
         try {
             ResultSet rs = createStatement().executeQuery("SELECT title FROM inventory WHERE title='" + titleField.getText() +"'");
@@ -1076,110 +1056,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             return false;
         }
     }
-    
-    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        FileFilter filter = new FileNameExtensionFilter(".png, .jpg, .jpeg", "png", "jpg", "jpeg");
-        fileChooser.addChoosableFileFilter(filter);
-        int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            selectedFile = file;
-            if(filter.accept(file)) {
-                filePathText.setText(file.getAbsolutePath());
-            } else {
-                JOptionPane.showMessageDialog(warningPane, "Please select either a .png, .jpg, or .jpeg file", "Warning", JOptionPane.ERROR_MESSAGE);
-                fileChooser.setCurrentDirectory(file);
-                browseButtonActionPerformed(evt);
-            }
-        } else {
-            System.out.println("File access cancelled by user.");
-        }
-    }//GEN-LAST:event_browseButtonActionPerformed
-
-    private void submitNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitNewButtonActionPerformed
-        submitNewButton.setEnabled(false);
-        //Check that fields are valid
-        if(titleField.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(warningPane, "Please enter a title", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
-            return;
-        }
-        if(isDuplicateTitle()) {
-            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
-            return;
-        }
-        if(descriptionTextArea.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(warningPane, "Please enter a description", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
-            return;
-        }
-        if(selectedFile == null) {
-            JOptionPane.showMessageDialog(warningPane, "Please enter an image file", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
-            return;
-        }
-        if(categoryList.getSelectedItem().equals("New Category")) {
-            JOptionPane.showMessageDialog(warningPane, "Please select a category", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
-            return;
-        }
-        if(((Integer)availableSpinner.getValue() + (Integer)rentedSpinner.getValue()) == 0) {
-            JOptionPane.showMessageDialog(warningPane, "Please enter a value for either #available or #rented", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
-            return;
-        }
-        String fileName = titleField.getText().toLowerCase();
-        try {
-            fileName = URLEncoder.encode(fileName, "UTF-8");
-            fileName += "."+(FilenameUtils.getExtension(selectedFile.getAbsolutePath()).toLowerCase());
-        } catch(Exception e) {
-            JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
-            return;
-        }
-        String working;
-        if(workingComboBox.getSelectedItem().equals("Working")) {
-            working = "TRUE";
-        } else {
-            working = "FALSE";
-        }
-        //Add SQL entry
-        try {
-            String query = "INSERT INTO inventory (title,description,category,time_period,picture_path,num_available,num_rented,working) "
-                + "VALUES ('"+titleField.getText()+"','"+descriptionTextArea.getText()+"','"+(String)categoryList.getSelectedItem()+"',"
-                +Integer.parseInt((String)timePeriodCombo.getSelectedItem())+",'/images/inventory/"+fileName+"',"+availableSpinner.getValue()
-                +","+rentedSpinner.getValue()+","+working+")";
-            createStatement().executeUpdate(query);
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-        //Upload image via FTP
-        String host = prefs.get(HOST, "127.0.0.1");
-        int port = Integer.parseInt(prefs.get(PORT, "8080"));
-        String username = prefs.get(USERNAME_FTP, "root");
-        String password = prefs.get(PASSWORD_FTP, "");
-        String uploadPath = "/images/inventory/";
-        String filePath = selectedFile.getAbsolutePath();
-        File uploadFile = new File(filePath);
-        uploadProgressBar.setValue(0);
-        UploadTask task = new UploadTask(host, port, username, password,
-                uploadPath, uploadFile, fileName);
-        task.addPropertyChangeListener(this);
-        task.execute();
-        try {
-            updateAll();
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-    }//GEN-LAST:event_submitNewButtonActionPerformed
-  
+      
     /**
      * Update the progress bar's state whenever the progress of upload changes.
      */
@@ -1416,12 +1293,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         }
     }//GEN-LAST:event_searchByIDButtonActionPerformed
 
-    private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
-        if(isDuplicateTitle()) {
-            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_titleFieldFocusLost
-
     private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
         try {
             if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
@@ -1434,6 +1305,156 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("VendorError: " + ex.getErrorCode());
         }
     }//GEN-LAST:event_tabPaneStateChanged
+
+    private void submitNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitNewButtonActionPerformed
+        submitNewButton.setEnabled(false);
+        //Check that fields are valid
+        if(titleField.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(warningPane, "Please enter a title", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        if(isDuplicateTitle()) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        if(descriptionTextArea.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(warningPane, "Please enter a description", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        if(selectedFile == null) {
+            JOptionPane.showMessageDialog(warningPane, "Please enter an image file", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        if(categoryList.getSelectedItem().equals("New Category")) {
+            JOptionPane.showMessageDialog(warningPane, "Please select a category", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        if(((Integer)availableSpinner.getValue() + (Integer)rentedSpinner.getValue()) == 0) {
+            JOptionPane.showMessageDialog(warningPane, "Please enter a value for either #available or #rented", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        String fileName = titleField.getText().toLowerCase();
+        try {
+            fileName = URLEncoder.encode(fileName, "UTF-8");
+            fileName += "."+(FilenameUtils.getExtension(selectedFile.getAbsolutePath()).toLowerCase());
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
+            submitNewButton.setEnabled(true);
+            return;
+        }
+        String working;
+        if(workingComboBox.getSelectedItem().equals("Working")) {
+            working = "TRUE";
+        } else {
+            working = "FALSE";
+        }
+        //Add SQL entry
+        try {
+            String query = "INSERT INTO inventory (title,description,category,time_period,picture_path,num_available,num_rented,working) "
+            + "VALUES ('"+titleField.getText()+"','"+descriptionTextArea.getText()+"','"+(String)categoryList.getSelectedItem()+"',"
+            +Integer.parseInt((String)timePeriodCombo.getSelectedItem())+",'/images/inventory/"+fileName+"',"+availableSpinner.getValue()
+            +","+rentedSpinner.getValue()+","+working+")";
+            createStatement().executeUpdate(query);
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        //Upload image via FTP
+        String host = prefs.get(HOST, "127.0.0.1");
+        int port = Integer.parseInt(prefs.get(PORT, "8080"));
+        String username = prefs.get(USERNAME_FTP, "root");
+        String password = prefs.get(PASSWORD_FTP, "");
+        String uploadPath = "/images/inventory/";
+        String filePath = selectedFile.getAbsolutePath();
+        File uploadFile = new File(filePath);
+        uploadProgressBar.setValue(0);
+        UploadTask task = new UploadTask(host, port, username, password,
+            uploadPath, uploadFile, fileName);
+        task.addPropertyChangeListener(this);
+        task.execute();
+        try {
+            updateAll();
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }//GEN-LAST:event_submitNewButtonActionPerformed
+
+    private void categoryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListActionPerformed
+        if(!catUpdating && categoryList.getSelectedItem().equals("New Category")) {
+            String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
+            if(newCategory == null || newCategory.trim().equals("")) {
+                categoryList.setSelectedIndex(0);
+                return;
+            }
+            categoryList.addItem(newCategory);
+            categoryList.setSelectedItem(newCategory);
+        }
+    }//GEN-LAST:event_categoryListActionPerformed
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        String text = descriptionTextArea.getText();
+        if(text.length() > 150) {
+            descriptionTextArea.setText(text.substring(0, text.length() - 1));
+            JOptionPane.showMessageDialog(warningPane, "Please limit descriptions to 150 characters", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
+    private void titleFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleFieldKeyTyped
+        String text = titleField.getText();
+        if(text.length() > 20) {
+            titleField.setText(text.substring(0, text.length() - 1));
+            JOptionPane.showMessageDialog(warningPane, "Please limit titles to 20 characters", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_titleFieldKeyTyped
+
+    private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
+        if(isDuplicateTitle()) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_titleFieldActionPerformed
+
+    private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
+        if(isDuplicateTitle()) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_titleFieldFocusLost
+
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        FileFilter filter = new FileNameExtensionFilter(".png, .jpg, .jpeg", "png", "jpg", "jpeg");
+        fileChooser.addChoosableFileFilter(filter);
+        int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            selectedFile = file;
+            if(filter.accept(file)) {
+                filePathText.setText(file.getAbsolutePath());
+                try {
+                    BufferedImage myPicture = ImageIO.read(file);
+                    imageLabel.setIcon(new ImageIcon(myPicture));
+                    imageLabel.setText("");
+                } catch(Exception e) {
+                    JOptionPane.showMessageDialog(warningPane, "Error reading image", "Warning", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(warningPane, "Please select either a .png, .jpg, or .jpeg file", "Warning", JOptionPane.ERROR_MESSAGE);
+                fileChooser.setCurrentDirectory(file);
+                browseButtonActionPerformed(evt);
+            }
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
+    }//GEN-LAST:event_browseButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1486,6 +1507,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private javax.swing.JLabel filePathText;
     private javax.swing.JLabel filePathTextEdit;
     private javax.swing.JToggleButton ftpShowPass;
+    private javax.swing.JLabel imageLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
