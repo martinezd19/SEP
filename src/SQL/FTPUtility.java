@@ -87,6 +87,25 @@ public class FTPUtility {
             throw new FTPException("Error uploading file: " + ex.getMessage());
         }
     }
+    
+    public void renameFile(String dir, String oldName, String newName) throws FTPException {
+        try {
+            boolean success = ftpClient.changeWorkingDirectory(dir);
+            if (!success) {
+                throw new FTPException("Could not change working directory to "
+                        + dir + ". The directory may not exist.");
+            }
+            System.out.println(dir);
+            System.out.println(oldName);
+            System.out.println(newName);
+            success = ftpClient.rename(oldName, newName);
+            if (!success) {
+                throw new FTPException("Could not rename file.");
+            }
+        } catch (IOException ex) {
+            throw new FTPException("Error renaming file: " + ex.getMessage());
+        }
+    }
  
     /**
      * Write an array of bytes to the output stream.

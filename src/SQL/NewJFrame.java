@@ -40,6 +40,7 @@ import org.apache.commons.net.ftp.FTPReply;
 public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListener {
     
     private File selectedFile = null;
+    private File selectedFileEdit = null;
     private final String SERVER = "server";
     private final String USERNAME_SQL = "username";
     private final String PASSWORD_SQL = "password";
@@ -55,6 +56,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private Connection conn = null;
     private boolean catUpdating = false;
     private int editId = -1;
+    private boolean creating = false;
+    private boolean updating = false;
+    private final int EDIT_PANE_INDEX = 0;
+    private final int CREATE_PANE_INDEX = 1;
+    private final int OPTIONS_PANE_INDEX = 2;
     /**
      * Creates new form NewJFrame
      */
@@ -102,15 +108,15 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         //Handle connection failure
         if(!sql.connectionGood) {
             JOptionPane.showMessageDialog(warningPane, sql.exMessage.getMessage(), "SQL Server Connection Failed", JOptionPane.ERROR_MESSAGE);
-            tabPane.setEnabledAt(0, false);
-            tabPane.setEnabledAt(1, false);
-            tabPane.setSelectedIndex(2);
+            tabPane.setEnabledAt(EDIT_PANE_INDEX, false);
+            tabPane.setEnabledAt(CREATE_PANE_INDEX, false);
+            tabPane.setSelectedIndex(OPTIONS_PANE_INDEX);
             initialized = true;
             return false;
         } else {
             JOptionPane.showMessageDialog(warningPane, "SQL Server Connection Succeeded", "Connection Success", JOptionPane.INFORMATION_MESSAGE);
-            tabPane.setEnabledAt(0, true);
-            tabPane.setEnabledAt(1, true);
+            tabPane.setEnabledAt(EDIT_PANE_INDEX, true);
+            tabPane.setEnabledAt(CREATE_PANE_INDEX, true);
             this.conn = sql.conn;
             updateAll();
             initialized = true;
@@ -144,9 +150,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         while(rs.next()) {
             selectItemComboBox.addItem(rs.getString("title"));
         }
+        selectItemComboBox.addItem("Select Item");
+        selectItemComboBox.setSelectedItem("Select Item");
     }
     
     private void setEnabledAllEdit(boolean enabled) {
+        if(updating) {
+            tabPane.setEnabledAt(CREATE_PANE_INDEX, enabled);
+            tabPane.setEnabledAt(OPTIONS_PANE_INDEX, enabled);
+            tabPane.setSelectedIndex(EDIT_PANE_INDEX);
+        }
+        descriptionTextAreaEdit.setEnabled(enabled);
         Component[] arr = editPane.getComponents();
         for(Component component : arr) {
             component.setEnabled(enabled);
@@ -157,6 +171,18 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             searchByIDButton.setEnabled(true);
             jLabel26.setEnabled(true);
             jLabel27.setEnabled(true);
+        }
+    }
+    
+    private void setEnabledAllCreate(boolean enabled) {
+        if(creating) {
+            tabPane.setEnabledAt(EDIT_PANE_INDEX, enabled);
+            tabPane.setEnabledAt(OPTIONS_PANE_INDEX, enabled);
+            tabPane.setSelectedIndex(CREATE_PANE_INDEX);
+        }
+        Component[] arr = createPane.getComponents();
+        for(Component component : arr) {
+            component.setEnabled(enabled);
         }
     }
     
@@ -227,6 +253,9 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         jSeparator18 = new javax.swing.JSeparator();
         deleteButton = new javax.swing.JButton();
         searchByIDButton = new javax.swing.JButton();
+        imageLabelEdit = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        uploadProgressBarEdit = new javax.swing.JProgressBar();
         createPane = new javax.swing.JPanel();
         browseButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -405,6 +434,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
 
         workingComboBoxEdit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         workingComboBoxEdit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Working", "Nonworking" }));
+        workingComboBoxEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                workingComboBoxEditActionPerformed(evt);
+            }
+        });
 
         deleteButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         deleteButton.setText("Delete");
@@ -422,6 +456,15 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             }
         });
 
+        imageLabelEdit.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        imageLabelEdit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        imageLabelEdit.setText("No Image");
+
+        jLabel19.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel19.setText("Upload Progress");
+
+        uploadProgressBarEdit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
         javax.swing.GroupLayout editPaneLayout = new javax.swing.GroupLayout(editPane);
         editPane.setLayout(editPaneLayout);
         editPaneLayout.setHorizontalGroup(
@@ -434,65 +477,80 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                         .addContainerGap())
                     .addGroup(editPaneLayout.createSequentialGroup()
                         .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator12)
-                            .addGroup(editPaneLayout.createSequentialGroup()
-                                .addComponent(jLabel22)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(timePeriodComboEdit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jSeparator13, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(editPaneLayout.createSequentialGroup()
-                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel17)
-                                        .addGroup(editPaneLayout.createSequentialGroup()
-                                            .addComponent(filePathTextEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel18)
-                                                .addComponent(browseButtonEdit)))
-                                        .addComponent(jSeparator11)
-                                        .addGroup(editPaneLayout.createSequentialGroup()
-                                            .addComponent(jLabel21)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(categoryListEdit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(editPaneLayout.createSequentialGroup()
-                                            .addComponent(jLabel23)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(availableSpinnerEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(jLabel24)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(rentedSpinnerEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(editPaneLayout.createSequentialGroup()
-                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(editPaneLayout.createSequentialGroup()
-                                        .addGap(17, 17, 17)
-                                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(editPaneLayout.createSequentialGroup()
-                                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel29)
-                                                    .addComponent(jLabel30))
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                            .addComponent(titleFieldEdit)
-                                            .addComponent(jScrollPane3)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, editPaneLayout.createSequentialGroup()
-                                        .addComponent(jLabel31)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(workingComboBoxEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jSeparator17, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addGap(6, 6, 6))
                             .addGroup(editPaneLayout.createSequentialGroup()
                                 .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jSeparator18, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(jSeparator12)
+                                    .addGroup(editPaneLayout.createSequentialGroup()
+                                        .addComponent(jLabel22)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(timePeriodComboEdit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jSeparator13, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(editPaneLayout.createSequentialGroup()
+                                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel17)
+                                            .addGroup(editPaneLayout.createSequentialGroup()
+                                                .addComponent(filePathTextEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel18)
+                                                    .addComponent(browseButtonEdit)))
+                                            .addComponent(jSeparator11)
+                                            .addGroup(editPaneLayout.createSequentialGroup()
+                                                .addComponent(jLabel21)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(categoryListEdit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(editPaneLayout.createSequentialGroup()
+                                                .addComponent(jLabel23)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(availableSpinnerEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jLabel24)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(rentedSpinnerEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 1, Short.MAX_VALUE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(editPaneLayout.createSequentialGroup()
+                                .addComponent(imageLabelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(editPaneLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(editPaneLayout.createSequentialGroup()
+                                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(editPaneLayout.createSequentialGroup()
+                                                .addGap(17, 17, 17)
+                                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(editPaneLayout.createSequentialGroup()
+                                                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(jLabel29)
+                                                            .addComponent(jLabel30))
+                                                        .addGap(0, 0, Short.MAX_VALUE))
+                                                    .addComponent(titleFieldEdit)
+                                                    .addComponent(jScrollPane3)))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, editPaneLayout.createSequentialGroup()
+                                                .addComponent(jLabel31)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(workingComboBoxEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jSeparator17, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addGap(6, 6, 6))
+                                    .addGroup(editPaneLayout.createSequentialGroup()
+                                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jSeparator18, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(editPaneLayout.createSequentialGroup()
+                                                .addGap(54, 54, 54)
+                                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addContainerGap(21, Short.MAX_VALUE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editPaneLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                    .addComponent(uploadProgressBarEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel19))
+                                .addGap(22, 22, 22))))))
             .addGroup(editPaneLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jLabel26)
@@ -520,6 +578,31 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 .addComponent(jSeparator15, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(editPaneLayout.createSequentialGroup()
+                        .addComponent(jLabel29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(titleFieldEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator18, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel31)
+                            .addComponent(workingComboBoxEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jSeparator17, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel19)
+                        .addGap(18, 18, 18)
+                        .addComponent(uploadProgressBarEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(editPaneLayout.createSequentialGroup()
                         .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(editPaneLayout.createSequentialGroup()
@@ -553,28 +636,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                                     .addComponent(rentedSpinnerEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(editPaneLayout.createSequentialGroup()
-                        .addComponent(jLabel29)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(titleFieldEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel30)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSeparator18, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel31)
-                            .addComponent(workingComboBoxEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jSeparator17, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(17, 17, 17)
-                .addGroup(editPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(183, Short.MAX_VALUE))
+                        .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(imageLabelEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         tabPane.addTab("Edit existing", editPane);
@@ -681,7 +746,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         jLabel28.setText("Choose Working/Nonworking");
 
         workingComboBox.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        workingComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Working", "Nonworking" }));
+        workingComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Item", "Working", "Nonworking" }));
 
         imageLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -821,7 +886,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                         .addComponent(jLabel16)
                         .addGap(18, 18, 18)
                         .addComponent(uploadProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(103, Short.MAX_VALUE))
+                        .addContainerGap(128, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, createPaneLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1015,7 +1080,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(refreshButton))
                     .addComponent(sqlShowPass))
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addContainerGap(120, Short.MAX_VALUE))
         );
 
         tabPane.addTab("Options", optionsPane);
@@ -1051,16 +1116,27 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         }
     }//GEN-LAST:event_prefSaveButtonSQLActionPerformed
 
-    private boolean isDuplicateTitle() {
+    private boolean isDuplicateTitle(String title) {
         try {
-            ResultSet rs = createStatement().executeQuery("SELECT title FROM inventory WHERE title='" + titleField.getText() +"'");
+            ResultSet rs = createStatement().executeQuery("SELECT title FROM inventory WHERE title='" + title +"'");
             return rs.next();
         } catch(SQLException ex) {
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            return false;
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+            return true;
         }
     }
       
@@ -1071,11 +1147,48 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
-            uploadProgressBar.setValue(progress);
-            if(progress == 100) {
-                submitNewButton.setEnabled(true);
-                progress = 0;
+            if(creating) {
                 uploadProgressBar.setValue(progress);
+            } else if(updating) {
+                uploadProgressBarEdit.setValue(progress);
+            } else {
+                JOptionPane.showMessageDialog(warningPane, "Critical error with loading bar", "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+            if(progress == 100) {
+                if(creating) {
+                    setEnabledAllCreate(true);
+                    progress = 0;
+                    uploadProgressBar.setValue(progress);
+                    creating = false;
+                } else if(updating) {
+                    setEnabledAllEdit(true);
+                    progress = 0;
+                    uploadProgressBarEdit.setValue(progress);
+                    updating = false;
+                } else {
+                    JOptionPane.showMessageDialog(warningPane, "Critical error with loading bar", "Warning", JOptionPane.ERROR_MESSAGE);
+                }
+                try {
+                    if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+                        updateAll();
+                    }
+                } catch(SQLException ex) {
+                    // handle any errors
+                    System.out.println("SQLException: " + ex.getMessage());
+                    System.out.println("SQLState: " + ex.getSQLState());
+                    System.out.println("VendorError: " + ex.getErrorCode());
+                    try {
+                        if(!conn.isValid(0)) {
+                            SQLConnect();
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("SQLException: " + e.getMessage());
+                        System.out.println("SQLState: " + e.getSQLState());
+                        System.out.println("VendorError: " + e.getErrorCode());
+                        JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                        System.exit(0);
+                    }
+                }   
             }
         }
     }
@@ -1099,6 +1212,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
         }
     }//GEN-LAST:event_refreshButtonActionPerformed
 
@@ -1108,13 +1232,22 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            selectedFile = file;
+            selectedFileEdit = file;
             if(filter.accept(file)) {
-                filePathText.setText(file.getAbsolutePath());
+                filePathTextEdit.setText(file.getAbsolutePath());
+                try {
+                    BufferedImage myPicture = ImageIO.read(file);
+                    myPicture = (BufferedImage)getScaledImage(myPicture, imageLabelEdit.getWidth(), imageLabelEdit.getHeight());
+                    imageLabelEdit.setIcon(new ImageIcon(myPicture));
+                    imageLabelEdit.setText("");
+                } catch(Exception e) {
+                    JOptionPane.showMessageDialog(warningPane, "Error reading image", "Warning", JOptionPane.ERROR_MESSAGE);
+                    System.err.println(e.getMessage());
+                }
             } else {
                 JOptionPane.showMessageDialog(warningPane, "Please select either a .png, .jpg, or .jpeg file", "Warning", JOptionPane.ERROR_MESSAGE);
                 fileChooser.setCurrentDirectory(file);
-                browseButtonActionPerformed(evt);
+                browseButtonEditActionPerformed(evt);
             }
         } else {
             System.out.println("File access cancelled by user.");
@@ -1128,9 +1261,185 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             categoryListEdit.setSelectedItem(newCategory);
         }
     }//GEN-LAST:event_categoryListEditActionPerformed
-
+    
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        // TODO add your handling code here:
+        setEnabledAllEdit(false);
+        //Check that fields are valid
+        if(titleFieldEdit.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(warningPane, "Please enter a title", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            setEnabledAllEdit(true);
+            return;
+        }
+        if(descriptionTextAreaEdit.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(warningPane, "Please enter a description", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            setEnabledAllEdit(true);
+            return;
+        }
+        if(categoryListEdit.getSelectedItem().equals("New Category")) {
+            JOptionPane.showMessageDialog(warningPane, "Please select a category", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            setEnabledAllEdit(true);
+            return;
+        }
+        String oldName = null;
+        try {
+            ResultSet rs2 = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id='"+editId+"'");
+            if(rs2.next()) {
+                oldName = rs2.getString("picture_path");
+            } else {
+                JOptionPane.showMessageDialog(warningPane, "Error getting SQL data", "Server error", JOptionPane.ERROR_MESSAGE);
+                setEnabledAllEdit(true);
+                return;
+            }
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+            setEnabledAllEdit(true);
+            return;
+        }       
+        String fileName = titleFieldEdit.getText().toLowerCase();
+        if(oldName != null) {
+            try {
+                fileName = URLEncoder.encode(fileName, "UTF-8");
+                fileName += "."+((selectedFileEdit != null) ? (FilenameUtils.getExtension(selectedFileEdit.getAbsolutePath()).toLowerCase()) : (oldName.substring(oldName.indexOf(".")+1)));
+            } catch(Exception e) {
+                JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
+                setEnabledAllEdit(true);
+                return;
+            }
+        }
+        updating = true;
+        String working;
+        if(workingComboBoxEdit.getSelectedItem().equals("Working")) {
+            working = "TRUE";
+        } else {
+            working = "FALSE";
+        }
+          
+        //Modify SQL entry
+        try {
+            String query = "UPDATE inventory "
+                    + "SET title='"+titleFieldEdit.getText()+
+                    "' ,description='"+descriptionTextAreaEdit.getText()+
+                    "' ,category='"+categoryListEdit.getSelectedItem()+
+                    "' ,time_period='"+timePeriodComboEdit.getSelectedItem()+
+                    "' ,picture_path='"+fileName+
+                    "' ,num_available="+availableSpinnerEdit.getValue()+
+                    " ,num_rented="+rentedSpinnerEdit.getValue()+
+                    " ,working="+working+
+                    " WHERE id="+editId+";";
+            createStatement().executeUpdate(query);
+        } catch(SQLException ex) {
+            // handle any errors
+            JOptionPane.showMessageDialog(warningPane, "Error setting FTP", "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+            setEnabledAllEdit(true);
+            return;
+        }
+        //Upload image via FTP
+        if(selectedFileEdit != null) {
+            String host = prefs.get(HOST, "127.0.0.1");
+            int port = Integer.parseInt(prefs.get(PORT, "8080"));
+            String username = prefs.get(USERNAME_FTP, "root");
+            String password = prefs.get(PASSWORD_FTP, "");
+            FTPClient ftp = new FTPClient();
+            try {
+                ftp.connect(host, port);
+                int replyCode = ftp.getReplyCode();
+                if (!FTPReply.isPositiveCompletion(replyCode)) {
+                    JOptionPane.showMessageDialog(warningPane, "FTP Server refused connection", "Error", JOptionPane.ERROR_MESSAGE);
+                    setEnabledAllEdit(true);
+                    return;
+                }
+
+                boolean logged = ftp.login(username, password);
+                if (!logged) {
+                    // failed to login
+                    ftp.disconnect();
+                    JOptionPane.showMessageDialog(warningPane, "Could not login to server", "Error", JOptionPane.ERROR_MESSAGE);
+                    setEnabledAllEdit(true);
+                    return;
+                }
+
+                boolean deleted = ftp.deleteFile("/images/inventory/"+oldName);
+                if(!deleted) {
+                    JOptionPane.showMessageDialog(warningPane, "Could not delete FTP", "Error", JOptionPane.ERROR_MESSAGE);
+                    setEnabledAllEdit(true);
+                    return;
+                }
+
+                ftp.enterLocalPassiveMode();
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(warningPane, "IO Error: "+ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            String uploadPath = "/images/inventory/";
+            String filePath = selectedFileEdit.getAbsolutePath();
+            File uploadFile = new File(filePath);
+            uploadProgressBarEdit.setValue(0);
+            UploadTask task = new UploadTask(host, port, username, password,
+                uploadPath, uploadFile, fileName);
+            task.addPropertyChangeListener(this);
+            task.execute();
+        } else {
+            String host = prefs.get(HOST, "127.0.0.1");
+            int port = Integer.parseInt(prefs.get(PORT, "8080"));
+            String username = prefs.get(USERNAME_FTP, "root");
+            String password = prefs.get(PASSWORD_FTP, "");
+            String uploadPath = "/images/inventory/";
+            System.out.println(oldName);
+            renameTask task = new renameTask(host, port, username, password,
+                uploadPath, oldName, fileName);
+            task.execute();
+            try {
+                if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+                    updateAll();
+                }
+            } catch(SQLException ex) {
+                // handle any errors
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                try {
+                    if(!conn.isValid(0)) {
+                        SQLConnect();
+                    }
+                } catch (SQLException e) {
+                    System.out.println("SQLException: " + e.getMessage());
+                    System.out.println("SQLState: " + e.getSQLState());
+                    System.out.println("VendorError: " + e.getErrorCode());
+                    JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                    System.exit(0);
+                }
+            } finally {
+                updating = false;
+            }
+        }
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void titleFieldEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldEditActionPerformed
@@ -1145,6 +1454,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
         }
     }//GEN-LAST:event_titleFieldEditActionPerformed
 
@@ -1169,6 +1489,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     }//GEN-LAST:event_searchByIDFieldActionPerformed
 
     private void selectItemComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectItemComboBoxActionPerformed
+        if(((String)selectItemComboBox.getSelectedItem()).equals("Select Item")) {
+            setEnabledAllEdit(false);
+            return;
+        }
         try {
             ResultSet rs = createStatement().executeQuery("SELECT id FROM inventory WHERE title='"+(String)selectItemComboBox.getSelectedItem()+"'");
             if(rs.next()) {
@@ -1179,6 +1503,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
         }            
     }//GEN-LAST:event_selectItemComboBoxActionPerformed
 
@@ -1196,6 +1531,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
             JOptionPane.showMessageDialog(warningPane, "Unable to delete", "Error", JOptionPane.ERROR_MESSAGE);
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
             return;
         }
         String host = prefs.get(HOST, "127.0.0.1");
@@ -1240,11 +1586,43 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
             JOptionPane.showMessageDialog(warningPane, "Could not delete SQL", "Error", JOptionPane.ERROR_MESSAGE);
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
             return;
         }
         
         if(fullyDeleted) {
             JOptionPane.showMessageDialog(warningPane, "Item fully deleted", "Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+                    updateAll();
+                }
+            } catch(SQLException ex) {
+                // handle any errors
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                try {
+                    if(!conn.isValid(0)) {
+                        SQLConnect();
+                    }
+                } catch (SQLException e) {
+                    System.out.println("SQLException: " + e.getMessage());
+                    System.out.println("SQLState: " + e.getSQLState());
+                    System.out.println("VendorError: " + e.getErrorCode());
+                    JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                    System.exit(0);
+                }
+            }
         } else { 
             JOptionPane.showMessageDialog(warningPane, "Failed to delete image. However, server entry was still removed", "Deletion Partially Successful", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -1297,6 +1675,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
         }
     }//GEN-LAST:event_searchByIDButtonActionPerformed
 
@@ -1310,40 +1699,56 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
         }
     }//GEN-LAST:event_tabPaneStateChanged
 
     private void submitNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitNewButtonActionPerformed
-        submitNewButton.setEnabled(false);
+        setEnabledAllCreate(false);
         //Check that fields are valid
         if(titleField.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a title", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
+            setEnabledAllCreate(true);
             return;
         }
-        if(isDuplicateTitle()) {
+        if(isDuplicateTitle(titleField.getText().trim())) {
             JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
+            setEnabledAllCreate(true);
             return;
         }
         if(descriptionTextArea.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a description", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
+            setEnabledAllCreate(true);
             return;
         }
         if(selectedFile == null) {
             JOptionPane.showMessageDialog(warningPane, "Please enter an image file", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
+            setEnabledAllCreate(true);
             return;
         }
         if(categoryList.getSelectedItem().equals("New Category")) {
             JOptionPane.showMessageDialog(warningPane, "Please select a category", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
+            setEnabledAllCreate(true);
             return;
         }
         if(((Integer)availableSpinner.getValue() + (Integer)rentedSpinner.getValue()) == 0) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a value for either #available or #rented", "Invalid entry", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
+            setEnabledAllCreate(true);
+            return;
+        }
+        if(workingComboBox.getSelectedItem().equals("Select Item")) {
+            JOptionPane.showMessageDialog(warningPane, "Please select working or nonworking", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            setEnabledAllCreate(true);
             return;
         }
         String fileName = titleField.getText().toLowerCase();
@@ -1352,9 +1757,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             fileName += "."+(FilenameUtils.getExtension(selectedFile.getAbsolutePath()).toLowerCase());
         } catch(Exception e) {
             JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
-            submitNewButton.setEnabled(true);
+            setEnabledAllCreate(true);
             return;
         }
+        creating = true;
         String working;
         if(workingComboBox.getSelectedItem().equals("Working")) {
             working = "TRUE";
@@ -1373,6 +1779,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
         }
         //Upload image via FTP
         String host = prefs.get(HOST, "127.0.0.1");
@@ -1387,14 +1804,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             uploadPath, uploadFile, fileName);
         task.addPropertyChangeListener(this);
         task.execute();
-        try {
-            updateAll();
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
     }//GEN-LAST:event_submitNewButtonActionPerformed
 
     private void categoryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListActionPerformed
@@ -1426,13 +1835,13 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     }//GEN-LAST:event_titleFieldKeyTyped
 
     private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
-        if(isDuplicateTitle()) {
+        if(isDuplicateTitle(titleField.getText().trim())) {
             JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_titleFieldActionPerformed
 
     private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
-        if(isDuplicateTitle()) {
+        if(isDuplicateTitle(titleField.getText().trim())) {
             JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_titleFieldFocusLost
@@ -1464,6 +1873,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("File access cancelled by user.");
         }
     }//GEN-LAST:event_browseButtonActionPerformed
+
+    private void workingComboBoxEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workingComboBoxEditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workingComboBoxEditActionPerformed
     
     private Image getScaledImage(Image srcImg, int w, int h){
         try {
@@ -1538,6 +1951,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private javax.swing.JLabel filePathTextEdit;
     private javax.swing.JToggleButton ftpShowPass;
     private javax.swing.JLabel imageLabel;
+    private javax.swing.JLabel imageLabelEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1548,6 +1962,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -1610,6 +2025,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private javax.swing.JTextField titleFieldEdit;
     private javax.swing.JButton updateButton;
     private javax.swing.JProgressBar uploadProgressBar;
+    private javax.swing.JProgressBar uploadProgressBarEdit;
     private javax.swing.JOptionPane warningPane;
     private javax.swing.JComboBox<String> workingComboBox;
     private javax.swing.JComboBox<String> workingComboBoxEdit;
