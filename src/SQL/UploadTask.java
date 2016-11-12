@@ -79,10 +79,6 @@ public class UploadTask extends SwingWorker<Void, Void> {
      */
     @Override
     protected void done() {
-        if (!isCancelled()) {
-            JOptionPane.showMessageDialog(null,
-                    "File has been uploaded successfully!", "Message",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
+        return;
     }  
 }

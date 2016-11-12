@@ -496,7 +496,7 @@
                 <Property name="toolTipText" type="java.lang.String" value="Type title here"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="titleFieldEditActionPerformed"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="titleFieldEditFocusLost"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="titleFieldEditKeyTyped"/>
               </Events>
             </Component>
@@ -858,7 +858,6 @@
               </Properties>
               <Events>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="titleFieldFocusLost"/>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="titleFieldActionPerformed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="titleFieldKeyTyped"/>
               </Events>
             </Component>
@@ -912,8 +911,9 @@
                   <Font name="Tahoma" size="14" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="1">
-                    <StringItem index="0" value="Add new category"/>
+                  <StringArray count="2">
+                    <StringItem index="0" value="Select Category"/>
+                    <StringItem index="1" value="New Category"/>
                   </StringArray>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
@@ -941,22 +941,26 @@
                   <Font name="Tahoma" size="14" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="12">
-                    <StringItem index="0" value="1900"/>
-                    <StringItem index="1" value="1910"/>
-                    <StringItem index="2" value="1920"/>
-                    <StringItem index="3" value="1930"/>
-                    <StringItem index="4" value="1940"/>
-                    <StringItem index="5" value="1950"/>
-                    <StringItem index="6" value="1960"/>
-                    <StringItem index="7" value="1970"/>
-                    <StringItem index="8" value="1980"/>
-                    <StringItem index="9" value="1990"/>
-                    <StringItem index="10" value="2000"/>
-                    <StringItem index="11" value="2010"/>
+                  <StringArray count="13">
+                    <StringItem index="0" value="Select Period"/>
+                    <StringItem index="1" value="1900"/>
+                    <StringItem index="2" value="1910"/>
+                    <StringItem index="3" value="1920"/>
+                    <StringItem index="4" value="1930"/>
+                    <StringItem index="5" value="1940"/>
+                    <StringItem index="6" value="1950"/>
+                    <StringItem index="7" value="1960"/>
+                    <StringItem index="8" value="1970"/>
+                    <StringItem index="9" value="1980"/>
+                    <StringItem index="10" value="1990"/>
+                    <StringItem index="11" value="2000"/>
+                    <StringItem index="12" value="2010"/>
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="timePeriodComboActionPerformed"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>

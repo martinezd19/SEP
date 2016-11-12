@@ -62,10 +62,6 @@ public class renameTask extends SwingWorker<Void, Void> {
      */
     @Override
     protected void done() {
-        if (!isCancelled()) {
-            JOptionPane.showMessageDialog(null,
-                    "File has been renamed successfully!", "Message",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
+        return;
     }  
 }

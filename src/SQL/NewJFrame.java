@@ -18,13 +18,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -48,6 +52,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private final String PORT = "port";
     private final String USERNAME_FTP = "usernameftp";
     private final String PASSWORD_FTP = "passwordftp";
+    private String editTitle = "";
     private boolean sqlPassShowToggle = false;
     private boolean ftpPassShowToggle = false;
     private boolean initialized = false;
@@ -58,6 +63,8 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private int editId = -1;
     private boolean creating = false;
     private boolean updating = false;
+    private boolean itemsUpdating = false;
+    private boolean newCreated = false;
     private final int EDIT_PANE_INDEX = 0;
     private final int CREATE_PANE_INDEX = 1;
     private final int OPTIONS_PANE_INDEX = 2;
@@ -75,7 +82,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
-        System.out.println(titleField.getText());
     }
     
     private boolean SQLConnect() throws SQLException {
@@ -114,7 +120,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             initialized = true;
             return false;
         } else {
-            JOptionPane.showMessageDialog(warningPane, "SQL Server Connection Succeeded", "Connection Success", JOptionPane.INFORMATION_MESSAGE);
             tabPane.setEnabledAt(EDIT_PANE_INDEX, true);
             tabPane.setEnabledAt(CREATE_PANE_INDEX, true);
             this.conn = sql.conn;
@@ -137,14 +142,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         ResultSet rs = createStatement().executeQuery("SELECT DISTINCT category FROM inventory");
         categoryList.removeAllItems();
         categoryListEdit.removeAllItems();
+        categoryList.addItem("Select Category");
+        categoryList.addItem("New Category");
+        categoryListEdit.addItem("New Category");
         while(rs.next()) {
             categoryList.addItem(rs.getString("category"));
             categoryListEdit.addItem(rs.getString("category"));
         }
-        categoryList.addItem("New Category");
-        categoryListEdit.addItem("New Category");
+        categoryList.setSelectedItem(0);
         catUpdating = false;
         //Set items
+        itemsUpdating = true;
         selectItemComboBox.removeAllItems();
         rs = createStatement().executeQuery("SELECT title FROM inventory");
         while(rs.next()) {
@@ -152,14 +160,20 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         }
         selectItemComboBox.addItem("Select Item");
         selectItemComboBox.setSelectedItem("Select Item");
+        itemsUpdating = false;
+    }
+    
+    private void setTabs(boolean enabled, int index) {
+        tabPane.setEnabledAt(CREATE_PANE_INDEX, enabled);
+        tabPane.setEnabledAt(OPTIONS_PANE_INDEX, enabled);
+        tabPane.setEnabledAt(EDIT_PANE_INDEX, enabled);
+        if(!enabled) {
+            tabPane.setEnabledAt(index, true);
+        }
+        tabPane.setSelectedIndex(index);
     }
     
     private void setEnabledAllEdit(boolean enabled) {
-        if(updating) {
-            tabPane.setEnabledAt(CREATE_PANE_INDEX, enabled);
-            tabPane.setEnabledAt(OPTIONS_PANE_INDEX, enabled);
-            tabPane.setSelectedIndex(EDIT_PANE_INDEX);
-        }
         descriptionTextAreaEdit.setEnabled(enabled);
         Component[] arr = editPane.getComponents();
         for(Component component : arr) {
@@ -175,11 +189,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     }
     
     private void setEnabledAllCreate(boolean enabled) {
-        if(creating) {
-            tabPane.setEnabledAt(EDIT_PANE_INDEX, enabled);
-            tabPane.setEnabledAt(OPTIONS_PANE_INDEX, enabled);
-            tabPane.setSelectedIndex(CREATE_PANE_INDEX);
-        }
         Component[] arr = createPane.getComponents();
         for(Component component : arr) {
             component.setEnabled(enabled);
@@ -189,7 +198,9 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private void populateData(int id) throws SQLException {
         ResultSet rs = createStatement().executeQuery("SELECT * FROM inventory WHERE id="+id);
         rs.next();
-        titleFieldEdit.setText(rs.getString("title"));
+        searchByIDField.setText(String.valueOf(id));
+        editTitle = rs.getString("title");
+        titleFieldEdit.setText(editTitle);
         descriptionTextAreaEdit.setText(rs.getString("description"));
         String working;
         if(rs.getInt("working") == 1) {
@@ -203,6 +214,10 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         availableSpinnerEdit.setValue((Integer)rs.getInt("num_available"));
         rentedSpinnerEdit.setValue((Integer)rs.getInt("num_rented"));
         editId = rs.getInt("id");
+        filePathTextEdit.setText("No current selection");
+        selectedFileEdit = null;
+        imageLabelEdit.setIcon(null);
+        imageLabelEdit.setText("No image");
         setEnabledAllEdit(true);
     }
 
@@ -402,9 +417,9 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
 
         titleFieldEdit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         titleFieldEdit.setToolTipText("Type title here");
-        titleFieldEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                titleFieldEditActionPerformed(evt);
+        titleFieldEdit.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                titleFieldEditFocusLost(evt);
             }
         });
         titleFieldEdit.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -674,11 +689,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 titleFieldFocusLost(evt);
             }
         });
-        titleField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                titleFieldActionPerformed(evt);
-            }
-        });
         titleField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 titleFieldKeyTyped(evt);
@@ -705,7 +715,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         jLabel5.setText("Choose Category");
 
         categoryList.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        categoryList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Add new category" }));
+        categoryList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "New Category" }));
         categoryList.setToolTipText("");
         categoryList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -717,7 +727,12 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         jLabel9.setText("Choose Time Period");
 
         timePeriodCombo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        timePeriodCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1900", "1910", "1920", "1930", "1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010" }));
+        timePeriodCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Period", "1900", "1910", "1920", "1930", "1940", "1950", "1960", "1970", "1980", "1990", "2000", "2010" }));
+        timePeriodCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timePeriodComboActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setText("# Available");
@@ -1116,15 +1131,8 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         }
     }//GEN-LAST:event_prefSaveButtonSQLActionPerformed
 
-    private boolean isDuplicateTitle(String title) {
+    private boolean isDuplicateTitle(String title, String exclude) {
         try {
-            ResultSet rs = createStatement().executeQuery("SELECT title FROM inventory WHERE title='" + title +"'");
-            return rs.next();
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
             try {
                 if(!conn.isValid(0)) {
                     SQLConnect();
@@ -1136,8 +1144,35 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
+            PreparedStatement stmt = conn.prepareStatement("SELECT title FROM inventory WHERE title=?");
+            stmt.setString(1, title);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next() && !rs.getString("title").equals(exclude)) {
+                return true;
+            } else {return false;}
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
             return true;
         }
+    }
+    
+    private void clearCreate() {
+        filePathText.setText("No current selection");
+        selectedFile = null;
+        titleField.setText("");
+        descriptionTextArea.setText("");
+        workingComboBox.setSelectedIndex(0);
+        timePeriodCombo.setSelectedIndex(0);
+        availableSpinner.setValue(0);
+        rentedSpinner.setValue(0);
+        workingComboBox.setSelectedIndex(0);
+        imageLabel.setIcon(null);
+        imageLabel.setText("No Image");
     }
       
     /**
@@ -1157,19 +1192,36 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             if(progress == 100) {
                 if(creating) {
                     setEnabledAllCreate(true);
+                    setTabs(true, CREATE_PANE_INDEX);
                     progress = 0;
                     uploadProgressBar.setValue(progress);
+                    JOptionPane.showMessageDialog(warningPane, "Item Created", "Complete", JOptionPane.INFORMATION_MESSAGE);
                     creating = false;
+                    newCreated = false;
+                    clearCreate();
                 } else if(updating) {
                     setEnabledAllEdit(true);
+                    setTabs(true, EDIT_PANE_INDEX);
                     progress = 0;
                     uploadProgressBarEdit.setValue(progress);
+                    JOptionPane.showMessageDialog(warningPane, "Item Updated", "Complete", JOptionPane.INFORMATION_MESSAGE);
                     updating = false;
                 } else {
                     JOptionPane.showMessageDialog(warningPane, "Critical error with loading bar", "Warning", JOptionPane.ERROR_MESSAGE);
                 }
                 try {
                     if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+                        try {
+                            if(!conn.isValid(0)) {
+                                SQLConnect();
+                            }
+                        } catch (SQLException e) {
+                            System.out.println("SQLException: " + e.getMessage());
+                            System.out.println("SQLState: " + e.getSQLState());
+                            System.out.println("VendorError: " + e.getErrorCode());
+                            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                            System.exit(0);
+                        }
                         updateAll();
                     }
                 } catch(SQLException ex) {
@@ -1177,17 +1229,8 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                     System.out.println("SQLException: " + ex.getMessage());
                     System.out.println("SQLState: " + ex.getSQLState());
                     System.out.println("VendorError: " + ex.getErrorCode());
-                    try {
-                        if(!conn.isValid(0)) {
-                            SQLConnect();
-                        }
-                    } catch (SQLException e) {
-                        System.out.println("SQLException: " + e.getMessage());
-                        System.out.println("SQLState: " + e.getSQLState());
-                        System.out.println("VendorError: " + e.getErrorCode());
-                        JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
-                        System.exit(0);
-                    }
+                    JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                    System.exit(0);
                 }   
             }
         }
@@ -1212,17 +1255,8 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            try {
-                if(!conn.isValid(0)) {
-                    SQLConnect();
-                }
-            } catch (SQLException e) {
-                System.out.println("SQLException: " + e.getMessage());
-                System.out.println("SQLState: " + e.getSQLState());
-                System.out.println("VendorError: " + e.getErrorCode());
-                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
     }//GEN-LAST:event_refreshButtonActionPerformed
 
@@ -1254,47 +1288,48 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         }
     }//GEN-LAST:event_browseButtonEditActionPerformed
 
+    /* private boolean checkInput(String s, JComponent focus) {
+        Pattern p = Pattern.compile("[^A-Za-z0-9 ]");
+        Matcher m = p.matcher(s);
+        boolean b = m.find();
+        if(b) {
+            JOptionPane.showMessageDialog(warningPane, "Invalid input; please do not input any special characters", "Warning", JOptionPane.ERROR_MESSAGE);
+            focus.requestFocusInWindow();
+            return false;
+        }
+        return true;
+    } */
+    
     private void categoryListEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListEditActionPerformed
         if(!catUpdating && categoryListEdit.getSelectedItem().equals("New Category")) {
-            String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
-            categoryListEdit.addItem(newCategory);
-            categoryListEdit.setSelectedItem(newCategory);
+            categoryEditPrompt();
         }
     }//GEN-LAST:event_categoryListEditActionPerformed
     
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         setEnabledAllEdit(false);
+        setTabs(false, EDIT_PANE_INDEX);
         //Check that fields are valid
         if(titleFieldEdit.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a title", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllEdit(true);
+            setTabs(true, EDIT_PANE_INDEX);
             return;
         }
         if(descriptionTextAreaEdit.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a description", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllEdit(true);
+            setTabs(true, EDIT_PANE_INDEX);
             return;
         }
         if(categoryListEdit.getSelectedItem().equals("New Category")) {
             JOptionPane.showMessageDialog(warningPane, "Please select a category", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllEdit(true);
+            setTabs(true, EDIT_PANE_INDEX);
             return;
         }
         String oldName = null;
         try {
-            ResultSet rs2 = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id='"+editId+"'");
-            if(rs2.next()) {
-                oldName = rs2.getString("picture_path");
-            } else {
-                JOptionPane.showMessageDialog(warningPane, "Error getting SQL data", "Server error", JOptionPane.ERROR_MESSAGE);
-                setEnabledAllEdit(true);
-                return;
-            }
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
             try {
                 if(!conn.isValid(0)) {
                     SQLConnect();
@@ -1306,8 +1341,22 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
-            setEnabledAllEdit(true);
-            return;
+            ResultSet rs2 = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id='"+editId+"'");
+            if(rs2.next()) {
+                oldName = rs2.getString("picture_path");
+            } else {
+                JOptionPane.showMessageDialog(warningPane, "Error getting SQL data", "Server error", JOptionPane.ERROR_MESSAGE);
+                setEnabledAllEdit(true);
+                setTabs(true, EDIT_PANE_INDEX);
+                return;
+            }
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }       
         String fileName = titleFieldEdit.getText().toLowerCase();
         if(oldName != null) {
@@ -1317,36 +1366,20 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             } catch(Exception e) {
                 JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
                 setEnabledAllEdit(true);
+                setTabs(true, EDIT_PANE_INDEX);
                 return;
             }
         }
         updating = true;
-        String working;
+        boolean working;
         if(workingComboBoxEdit.getSelectedItem().equals("Working")) {
-            working = "TRUE";
+            working = true;
         } else {
-            working = "FALSE";
+            working = false;
         }
           
         //Modify SQL entry
         try {
-            String query = "UPDATE inventory "
-                    + "SET title='"+titleFieldEdit.getText()+
-                    "' ,description='"+descriptionTextAreaEdit.getText()+
-                    "' ,category='"+categoryListEdit.getSelectedItem()+
-                    "' ,time_period='"+timePeriodComboEdit.getSelectedItem()+
-                    "' ,picture_path='"+fileName+
-                    "' ,num_available="+availableSpinnerEdit.getValue()+
-                    " ,num_rented="+rentedSpinnerEdit.getValue()+
-                    " ,working="+working+
-                    " WHERE id="+editId+";";
-            createStatement().executeUpdate(query);
-        } catch(SQLException ex) {
-            // handle any errors
-            JOptionPane.showMessageDialog(warningPane, "Error setting FTP", "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
             try {
                 if(!conn.isValid(0)) {
                     SQLConnect();
@@ -1358,8 +1391,24 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
-            setEnabledAllEdit(true);
-            return;
+            PreparedStatement stmt = conn.prepareStatement("UPDATE inventory SET title=?,description=?,category=?,time_period=?,picture_path=?,num_available=?,num_rented=?,working=? WHERE id=?");
+            stmt.setString(1, titleFieldEdit.getText());
+            stmt.setString(2, descriptionTextAreaEdit.getText());
+            stmt.setString(3, (String)categoryListEdit.getSelectedItem());
+            stmt.setInt(4, Integer.parseInt((String)timePeriodComboEdit.getSelectedItem()));
+            stmt.setString(5, ("/images/inventory/"+fileName));
+            stmt.setInt(6, (Integer)availableSpinnerEdit.getValue());
+            stmt.setInt(7, (Integer)rentedSpinnerEdit.getValue());
+            stmt.setBoolean(8, working);
+            stmt.setInt(9, editId);
+            stmt.executeUpdate();
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
         //Upload image via FTP
         if(selectedFileEdit != null) {
@@ -1374,6 +1423,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 if (!FTPReply.isPositiveCompletion(replyCode)) {
                     JOptionPane.showMessageDialog(warningPane, "FTP Server refused connection", "Error", JOptionPane.ERROR_MESSAGE);
                     setEnabledAllEdit(true);
+                    setTabs(true, EDIT_PANE_INDEX);
                     return;
                 }
 
@@ -1383,13 +1433,15 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                     ftp.disconnect();
                     JOptionPane.showMessageDialog(warningPane, "Could not login to server", "Error", JOptionPane.ERROR_MESSAGE);
                     setEnabledAllEdit(true);
+                    setTabs(true, EDIT_PANE_INDEX);
                     return;
                 }
 
-                boolean deleted = ftp.deleteFile("/images/inventory/"+oldName);
+                boolean deleted = ftp.deleteFile(oldName);
                 if(!deleted) {
                     JOptionPane.showMessageDialog(warningPane, "Could not delete FTP", "Error", JOptionPane.ERROR_MESSAGE);
                     setEnabledAllEdit(true);
+                    setTabs(true, EDIT_PANE_INDEX);
                     return;
                 }
 
@@ -1412,12 +1464,23 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             String username = prefs.get(USERNAME_FTP, "root");
             String password = prefs.get(PASSWORD_FTP, "");
             String uploadPath = "/images/inventory/";
-            System.out.println(oldName);
             renameTask task = new renameTask(host, port, username, password,
                 uploadPath, oldName, fileName);
             task.execute();
+            
             try {
                 if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+                    try {
+                        if(!conn.isValid(0)) {
+                            SQLConnect();
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("SQLException: " + e.getMessage());
+                        System.out.println("SQLState: " + e.getSQLState());
+                        System.out.println("VendorError: " + e.getErrorCode());
+                        JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                        System.exit(0);
+                    }
                     updateAll();
                 }
             } catch(SQLException ex) {
@@ -1425,54 +1488,21 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 System.out.println("SQLException: " + ex.getMessage());
                 System.out.println("SQLState: " + ex.getSQLState());
                 System.out.println("VendorError: " + ex.getErrorCode());
-                try {
-                    if(!conn.isValid(0)) {
-                        SQLConnect();
-                    }
-                } catch (SQLException e) {
-                    System.out.println("SQLException: " + e.getMessage());
-                    System.out.println("SQLState: " + e.getSQLState());
-                    System.out.println("VendorError: " + e.getErrorCode());
-                    JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
-                    System.exit(0);
-                }
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
             } finally {
                 updating = false;
+                JOptionPane.showMessageDialog(warningPane, "Item Updated", "Complete", JOptionPane.INFORMATION_MESSAGE);
+                setTabs(true, EDIT_PANE_INDEX);
             }
         }
     }//GEN-LAST:event_updateButtonActionPerformed
 
-    private void titleFieldEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldEditActionPerformed
-        try {
-            
-            ResultSet rs = createStatement().executeQuery("SELECT title FROM inventory WHERE title='" + titleField.getText() +"' AND id != "+editId);
-            if(rs.next()) {
-                JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            try {
-                if(!conn.isValid(0)) {
-                    SQLConnect();
-                }
-            } catch (SQLException e) {
-                System.out.println("SQLException: " + e.getMessage());
-                System.out.println("SQLState: " + e.getSQLState());
-                System.out.println("VendorError: " + e.getErrorCode());
-                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
-            }
-        }
-    }//GEN-LAST:event_titleFieldEditActionPerformed
-
     private void titleFieldEditKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleFieldEditKeyTyped
         String text = titleField.getText();
         if(text.length() > 20) {
-            titleField.setText(text.substring(0, text.length() - 1));
             JOptionPane.showMessageDialog(warningPane, "Please limit titles to 20 characters", "Warning", JOptionPane.ERROR_MESSAGE);
+            titleField.setText(text.substring(0, text.length() - 1));
         }
     }//GEN-LAST:event_titleFieldEditKeyTyped
 
@@ -1489,11 +1519,26 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     }//GEN-LAST:event_searchByIDFieldActionPerformed
 
     private void selectItemComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectItemComboBoxActionPerformed
+        if(itemsUpdating) {
+            return;
+        }
         if(((String)selectItemComboBox.getSelectedItem()).equals("Select Item")) {
             setEnabledAllEdit(false);
+            setTabs(true, EDIT_PANE_INDEX);
             return;
         }
         try {
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
             ResultSet rs = createStatement().executeQuery("SELECT id FROM inventory WHERE title='"+(String)selectItemComboBox.getSelectedItem()+"'");
             if(rs.next()) {
                 populateData(rs.getInt("id"));
@@ -1503,34 +1548,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            try {
-                if(!conn.isValid(0)) {
-                    SQLConnect();
-                }
-            } catch (SQLException e) {
-                System.out.println("SQLException: " + e.getMessage());
-                System.out.println("SQLState: " + e.getSQLState());
-                System.out.println("VendorError: " + e.getErrorCode());
-                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }            
     }//GEN-LAST:event_selectItemComboBoxActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         //Delete image
         boolean fullyDeleted  = true;
-        String deletePath;
+        boolean foundFile = false;
+        String deletePath = "";
         try {
-            ResultSet rs = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id="+editId);
-            rs.next();
-            deletePath = rs.getString("picture_path");
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            JOptionPane.showMessageDialog(warningPane, "Unable to delete", "Error", JOptionPane.ERROR_MESSAGE);
             try {
                 if(!conn.isValid(0)) {
                     SQLConnect();
@@ -1542,7 +1570,19 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
-            return;
+            ResultSet rs = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id="+editId);
+            if(rs.next()) {
+                deletePath = rs.getString("picture_path");
+                System.out.println(deletePath);
+                foundFile = true;
+            }
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
         String host = prefs.get(HOST, "127.0.0.1");
         int port = Integer.parseInt(prefs.get(PORT, "8080"));
@@ -1565,10 +1605,12 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 return;
             }
             
-            boolean deleted = ftp.deleteFile(deletePath);
-            if(!deleted) {
-                JOptionPane.showMessageDialog(warningPane, "Could not delete FTP", "Error", JOptionPane.ERROR_MESSAGE);
-                fullyDeleted = false;
+            if(foundFile) {
+                boolean deleted = ftp.deleteFile(deletePath);
+                if(!deleted) {
+                    JOptionPane.showMessageDialog(warningPane, "Could not delete FTP", "Error", JOptionPane.ERROR_MESSAGE);
+                    fullyDeleted = false;
+                }
             }
             
             ftp.enterLocalPassiveMode();
@@ -1579,13 +1621,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         
         //Delete SQL
         try {
-            createStatement().executeUpdate("DELETE FROM inventory WHERE id="+editId);
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            JOptionPane.showMessageDialog(warningPane, "Could not delete SQL", "Error", JOptionPane.ERROR_MESSAGE);
             try {
                 if(!conn.isValid(0)) {
                     SQLConnect();
@@ -1597,13 +1632,31 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
-            return;
+            createStatement().executeUpdate("DELETE FROM inventory WHERE id="+editId);
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
         
         if(fullyDeleted) {
             JOptionPane.showMessageDialog(warningPane, "Item fully deleted", "Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
             try {
                 if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+                    try {
+                        if(!conn.isValid(0)) {
+                            SQLConnect();
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("SQLException: " + e.getMessage());
+                        System.out.println("SQLState: " + e.getSQLState());
+                        System.out.println("VendorError: " + e.getErrorCode());
+                        JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                        System.exit(0);
+                    }
                     updateAll();
                 }
             } catch(SQLException ex) {
@@ -1611,6 +1664,12 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 System.out.println("SQLException: " + ex.getMessage());
                 System.out.println("SQLState: " + ex.getSQLState());
                 System.out.println("VendorError: " + ex.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+        } else { 
+            JOptionPane.showMessageDialog(warningPane, "Failed to delete image. However, server entry was still removed", "Deletion Partially Successful", JOptionPane.INFORMATION_MESSAGE);
+            try {
                 try {
                     if(!conn.isValid(0)) {
                         SQLConnect();
@@ -1622,9 +1681,15 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                     JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                     System.exit(0);
                 }
+                updateAll();
+            } catch(SQLException ex) {
+                // handle any errors
+                System.out.println("SQLException: " + ex.getMessage());
+                System.out.println("SQLState: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
             }
-        } else { 
-            JOptionPane.showMessageDialog(warningPane, "Failed to delete image. However, server entry was still removed", "Deletion Partially Successful", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -1664,7 +1729,20 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             JOptionPane.showMessageDialog(warningPane, "Please enter a valid number ID", "Error", JOptionPane.ERROR_MESSAGE);
         }
         try {
-            ResultSet rs = createStatement().executeQuery("SELECT id FROM inventory WHERE id="+Integer.parseInt((String)searchByIDField.getText().trim()));
+            try {
+                if(!conn.isValid(0)) {
+                    SQLConnect();
+                }
+            } catch (SQLException e) {
+                System.out.println("SQLException: " + e.getMessage());
+                System.out.println("SQLState: " + e.getSQLState());
+                System.out.println("VendorError: " + e.getErrorCode());
+                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+            PreparedStatement stmt = conn.prepareStatement("SELECT id FROM inventory WHERE id=?");
+            stmt.setInt(1, Integer.parseInt((String)searchByIDField.getText().trim()));
+            ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
                 populateData(rs.getInt("id"));
             } else {
@@ -1675,80 +1753,88 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            try {
-                if(!conn.isValid(0)) {
-                    SQLConnect();
-                }
-            } catch (SQLException e) {
-                System.out.println("SQLException: " + e.getMessage());
-                System.out.println("SQLState: " + e.getSQLState());
-                System.out.println("VendorError: " + e.getErrorCode());
-                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
     }//GEN-LAST:event_searchByIDButtonActionPerformed
 
     private void tabPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabPaneStateChanged
         try {
-            if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
+            if(initialized && tabPane.getSelectedIndex() == 0 && newCreated) {
+                try {
+                    if(!conn.isValid(0)) {
+                        SQLConnect();
+                    }
+                } catch (SQLException e) {
+                    System.out.println("SQLException: " + e.getMessage());
+                    System.out.println("SQLState: " + e.getSQLState());
+                    System.out.println("VendorError: " + e.getErrorCode());
+                    JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+                    System.exit(0);
+                }   
                 updateAll();
+                newCreated = false;
             }
         } catch(SQLException ex) {
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-            try {
-                if(!conn.isValid(0)) {
-                    SQLConnect();
-                }
-            } catch (SQLException e) {
-                System.out.println("SQLException: " + e.getMessage());
-                System.out.println("SQLState: " + e.getSQLState());
-                System.out.println("VendorError: " + e.getErrorCode());
-                JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
-            }
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
     }//GEN-LAST:event_tabPaneStateChanged
 
     private void submitNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitNewButtonActionPerformed
         setEnabledAllCreate(false);
+        setTabs(false, CREATE_PANE_INDEX);
         //Check that fields are valid
         if(titleField.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a title", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
-        if(isDuplicateTitle(titleField.getText().trim())) {
+        if(isDuplicateTitle(titleField.getText().trim(), null)) {
             JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
         if(descriptionTextArea.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a description", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
         if(selectedFile == null) {
             JOptionPane.showMessageDialog(warningPane, "Please enter an image file", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
-        if(categoryList.getSelectedItem().equals("New Category")) {
+        if(categoryList.getSelectedItem().equals("New Category") || categoryList.getSelectedItem().equals("Select Category")) {
             JOptionPane.showMessageDialog(warningPane, "Please select a category", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
         if(((Integer)availableSpinner.getValue() + (Integer)rentedSpinner.getValue()) == 0) {
             JOptionPane.showMessageDialog(warningPane, "Please enter a value for either #available or #rented", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
         if(workingComboBox.getSelectedItem().equals("Select Item")) {
             JOptionPane.showMessageDialog(warningPane, "Please select working or nonworking", "Invalid entry", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
+            return;
+        }
+        if(timePeriodCombo.getSelectedItem().equals("Select Period")) {
+            JOptionPane.showMessageDialog(warningPane, "Please select a time period", "Invalid entry", JOptionPane.ERROR_MESSAGE);
+            setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
         String fileName = titleField.getText().toLowerCase();
@@ -1758,27 +1844,18 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         } catch(Exception e) {
             JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
+            setTabs(true, CREATE_PANE_INDEX);
             return;
         }
         creating = true;
-        String working;
+        boolean working;
         if(workingComboBox.getSelectedItem().equals("Working")) {
-            working = "TRUE";
+            working = true;
         } else {
-            working = "FALSE";
+            working = false;
         }
         //Add SQL entry
         try {
-            String query = "INSERT INTO inventory (title,description,category,time_period,picture_path,num_available,num_rented,working) "
-            + "VALUES ('"+titleField.getText()+"','"+descriptionTextArea.getText()+"','"+(String)categoryList.getSelectedItem()+"',"
-            +Integer.parseInt((String)timePeriodCombo.getSelectedItem())+",'/images/inventory/"+fileName+"',"+availableSpinner.getValue()
-            +","+rentedSpinner.getValue()+","+working+")";
-            createStatement().executeUpdate(query);
-        } catch(SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
             try {
                 if(!conn.isValid(0)) {
                     SQLConnect();
@@ -1790,6 +1867,24 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO inventory (title,description,category,time_period,picture_path,num_available,num_rented,working) "
+            + "VALUES (?,?,?,?,?,?,?,?)");
+            stmt.setString(1, titleField.getText());
+            stmt.setString(2, descriptionTextArea.getText());
+            stmt.setString(3, (String)categoryList.getSelectedItem());
+            stmt.setInt(4, Integer.parseInt((String)timePeriodCombo.getSelectedItem()));
+            stmt.setString(5, ("images/inventory/"+fileName));
+            stmt.setInt(6, (Integer)availableSpinner.getValue());
+            stmt.setInt(7, (Integer)rentedSpinner.getValue());
+            stmt.setBoolean(8, working);
+            stmt.executeUpdate();
+        } catch(SQLException ex) {
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
         //Upload image via FTP
         String host = prefs.get(HOST, "127.0.0.1");
@@ -1805,16 +1900,30 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         task.addPropertyChangeListener(this);
         task.execute();
     }//GEN-LAST:event_submitNewButtonActionPerformed
-
-    private void categoryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListActionPerformed
-        if(!catUpdating && categoryList.getSelectedItem().equals("New Category")) {
-            String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
+    
+    private void categoryPrompt() {
+        String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
             if(newCategory == null || newCategory.trim().equals("")) {
                 categoryList.setSelectedIndex(0);
                 return;
             }
             categoryList.addItem(newCategory);
             categoryList.setSelectedItem(newCategory);
+    }
+    
+    private void categoryEditPrompt() {
+        String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
+            if(newCategory == null || newCategory.trim().equals("")) {
+                categoryListEdit.setSelectedIndex(0);
+                return;
+            }
+            categoryListEdit.addItem(newCategory);
+            categoryListEdit.setSelectedItem(newCategory);
+    }
+    
+    private void categoryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListActionPerformed
+        if(!catUpdating && categoryList.getSelectedItem().equals("New Category")) {
+            categoryPrompt();
         }
     }//GEN-LAST:event_categoryListActionPerformed
 
@@ -1829,20 +1938,15 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private void titleFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleFieldKeyTyped
         String text = titleField.getText();
         if(text.length() > 20) {
-            titleField.setText(text.substring(0, text.length() - 1));
             JOptionPane.showMessageDialog(warningPane, "Please limit titles to 20 characters", "Warning", JOptionPane.ERROR_MESSAGE);
+            titleField.setText(text.substring(0, text.length() - 1));
         }
     }//GEN-LAST:event_titleFieldKeyTyped
 
-    private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
-        if(isDuplicateTitle(titleField.getText().trim())) {
-            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_titleFieldActionPerformed
-
     private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
-        if(isDuplicateTitle(titleField.getText().trim())) {
+        if(isDuplicateTitle(titleField.getText().trim(), null)) {
             JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+            titleField.requestFocusInWindow();
         }
     }//GEN-LAST:event_titleFieldFocusLost
 
@@ -1877,6 +1981,17 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private void workingComboBoxEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workingComboBoxEditActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_workingComboBoxEditActionPerformed
+
+    private void titleFieldEditFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldEditFocusLost
+        if(isDuplicateTitle(titleFieldEdit.getText().trim(), editTitle)) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+            titleFieldEdit.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_titleFieldEditFocusLost
+
+    private void timePeriodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timePeriodComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_timePeriodComboActionPerformed
     
     private Image getScaledImage(Image srcImg, int w, int h){
         try {

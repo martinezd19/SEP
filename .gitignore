@@ -4,4 +4,4 @@ manifest.mf
 dist/*
 build/*
 test/*
-
+SEPsite/images/inventory/*
