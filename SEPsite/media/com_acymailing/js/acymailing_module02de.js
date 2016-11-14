@@ -269,8 +269,6 @@ function acymailingDisplayAjaxResponseJQuery(message, type, formName) {
         var wrapper = toggleButton.parent().parent().children()[1];
         jQuery(wrapper).css('height', '');
     }
-    ;
-
     var responseContainer = jQuery('#acymailing_fulldiv_' + formName + ' .responseContainer')[0];
 
     if (typeof responseContainer == 'undefined') {
@@ -332,8 +330,6 @@ function acymailingDisplayAjaxResponseMootools(message, type, formName) {
         var wrapper = toggleButton.getParent().getParent().getChildren()[1];
         wrapper.setStyle('height', '');
     }
-    ;
-
     try {
         var responseContainer = document.getElements('#acymailing_fulldiv_' + formName + ' .responseContainer')[0];
     } catch (err) {

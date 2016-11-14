@@ -1,0 +1,17 @@
+#Rewrite to www
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^sunshineeprops.com[nc]
+RewriteRule ^(.*)$ http://www.sunshineeprops.com/$1 [r=301,nc]
+
+#Change default directory page
+DirectoryIndex index.html
+
+#Prevent viewing of .htaccess file
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+#Prevent directory listings
+Options All -Indexes

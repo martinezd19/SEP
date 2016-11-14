@@ -112,7 +112,7 @@
             //Set initial width
             this.width = thumbWidth;
             if (this.width * (obj.group.length) > $(window).width()) {
-                left = Math.floor($(window).width() * 0.5 - (obj.index * this.width + this.width * 0.5))
+                left = Math.floor($(window).width() * 0.5 - (obj.index * this.width + this.width * 0.5));
                 if (left > 0) {
                     left = 0
                 }
@@ -121,13 +121,13 @@
                 }
                 this.list.css('left', left);
             }
-            this.list.width(this.width * (obj.group.length))
+            this.list.width(this.width * (obj.group.length));
             $('#fancybox-thumbs ul li').bind('click', function () {
                 var el = $(this);
                 $.fancybox.jumpto(el.index());
                 return false;
-            })
-            $pep = $('#fancybox-thumbs ul')
+            });
+            $pep = $('#fancybox-thumbs ul');
             if ($pep.width() > $(window).width()) {
                 $pep.pep({
                     start: function () {
@@ -206,7 +206,7 @@
             if (this.list) {
                 this.width = this.list.children().eq(0).outerWidth(true);
                 if (this.width * (obj.group.length) > $(window).width()) {
-                    left = Math.floor($(window).width() * 0.5 - (obj.index * this.width + this.width * 0.5))
+                    left = Math.floor($(window).width() * 0.5 - (obj.index * this.width + this.width * 0.5));
                     if (left > 0) {
                         left = 0
                     }

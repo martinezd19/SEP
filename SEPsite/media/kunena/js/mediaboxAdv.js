@@ -277,7 +277,6 @@ var Mediabox;
                         filteredLinks.include(filteredArray[index]);
                         filteredHrefs.include(filteredArray[index].toString());
                     }
-                    ;
                 });
 
                 return Mediabox.open(filteredLinks.map(linkMapper), filteredHrefs.indexOf(this.toString()), _options);
@@ -349,7 +348,6 @@ var Mediabox;
         if (options.keyboardStop) {
             return false;
         }
-        ;
     }
 
     function previous() {
@@ -1050,13 +1048,11 @@ var Mediabox;
         } else {
             mTop = -(mediaHeight / 2)
         }
-        ;
         if (mediaWidth >= left + left) {
             mLeft = -left
         } else {
             mLeft = -(mediaWidth / 2)
         }
-        ;
         /****/
         if (options.resizeOpening) {
             fx.resize.start({

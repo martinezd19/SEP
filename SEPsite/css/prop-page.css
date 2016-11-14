@@ -1,0 +1,17 @@
+.prop-select {
+    display: inline-block !important;
+    width: auto;
+}
+
+.prop-container {
+    text-align: justify !important;
+    width: 100% !important;
+    height: auto;
+    position: relative !important;
+}
+
+.prop-container:after {
+    display:inline-block !important;
+    width:100% !important;
+    content:'' !important;
+}

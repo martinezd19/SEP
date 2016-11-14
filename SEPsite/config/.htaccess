@@ -1,0 +1,3 @@
+#Block external access
+order allow,deny
+deny from all

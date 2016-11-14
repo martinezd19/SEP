@@ -1784,6 +1784,37 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.exit(0);
         }
     }//GEN-LAST:event_tabPaneStateChanged
+    
+    private void categoryPrompt() {
+        String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
+            if(newCategory == null || newCategory.trim().equals("")) {
+                categoryList.setSelectedIndex(0);
+                return;
+            }
+            categoryList.addItem(newCategory);
+            categoryList.setSelectedItem(newCategory);
+    }
+    
+    private void categoryEditPrompt() {
+        String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
+            if(newCategory == null || newCategory.trim().equals("")) {
+                categoryListEdit.setSelectedIndex(0);
+                return;
+            }
+            categoryListEdit.addItem(newCategory);
+            categoryListEdit.setSelectedItem(newCategory);
+    }
+    
+    private void workingComboBoxEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workingComboBoxEditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workingComboBoxEditActionPerformed
+
+    private void titleFieldEditFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldEditFocusLost
+        if(isDuplicateTitle(titleFieldEdit.getText().trim(), editTitle)) {
+            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
+            titleFieldEdit.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_titleFieldEditFocusLost
 
     private void submitNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitNewButtonActionPerformed
         setEnabledAllCreate(false);
@@ -1868,7 +1899,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 System.exit(0);
             }
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO inventory (title,description,category,time_period,picture_path,num_available,num_rented,working) "
-            + "VALUES (?,?,?,?,?,?,?,?)");
+                + "VALUES (?,?,?,?,?,?,?,?)");
             stmt.setString(1, titleField.getText());
             stmt.setString(2, descriptionTextArea.getText());
             stmt.setString(3, (String)categoryList.getSelectedItem());
@@ -1900,27 +1931,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         task.addPropertyChangeListener(this);
         task.execute();
     }//GEN-LAST:event_submitNewButtonActionPerformed
-    
-    private void categoryPrompt() {
-        String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
-            if(newCategory == null || newCategory.trim().equals("")) {
-                categoryList.setSelectedIndex(0);
-                return;
-            }
-            categoryList.addItem(newCategory);
-            categoryList.setSelectedItem(newCategory);
-    }
-    
-    private void categoryEditPrompt() {
-        String newCategory = JOptionPane.showInputDialog(warningPane, "Please enter new category", "New Category", JOptionPane.INFORMATION_MESSAGE);
-            if(newCategory == null || newCategory.trim().equals("")) {
-                categoryListEdit.setSelectedIndex(0);
-                return;
-            }
-            categoryListEdit.addItem(newCategory);
-            categoryListEdit.setSelectedItem(newCategory);
-    }
-    
+
+    private void timePeriodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timePeriodComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_timePeriodComboActionPerformed
+
     private void categoryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryListActionPerformed
         if(!catUpdating && categoryList.getSelectedItem().equals("New Category")) {
             categoryPrompt();
@@ -1977,21 +1992,6 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.out.println("File access cancelled by user.");
         }
     }//GEN-LAST:event_browseButtonActionPerformed
-
-    private void workingComboBoxEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workingComboBoxEditActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_workingComboBoxEditActionPerformed
-
-    private void titleFieldEditFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldEditFocusLost
-        if(isDuplicateTitle(titleFieldEdit.getText().trim(), editTitle)) {
-            JOptionPane.showMessageDialog(warningPane, "That title is already in use. Please create a different title.", "Warning", JOptionPane.ERROR_MESSAGE);
-            titleFieldEdit.requestFocusInWindow();
-        }
-    }//GEN-LAST:event_titleFieldEditFocusLost
-
-    private void timePeriodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timePeriodComboActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_timePeriodComboActionPerformed
     
     private Image getScaledImage(Image srcImg, int w, int h){
         try {

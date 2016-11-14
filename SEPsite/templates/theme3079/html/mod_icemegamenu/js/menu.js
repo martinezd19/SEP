@@ -340,7 +340,7 @@
             new e.ScrollToFixed(this, t)
         })
     }
-})(jQuery)
+})(jQuery);
 
 jQuery(function ($) {
     var $scrollEl = ($.browser.mozilla || $.browser.msie) ? $('html') : $('body');
@@ -360,7 +360,7 @@ jQuery(function ($) {
         $('.icemegamenu li').not('.parent').find('>a.iceMenuTitle[href^="#"]').click(function () {
             var a = $(this);
             animate_body(a);
-        })
+        });
         $('.icemegamenu li.parent>a.iceMenuTitle[href^="#"]').click(function () {
             var a = $(this);
             if (a.closest("li").hasClass("hover")) {
@@ -373,7 +373,7 @@ jQuery(function ($) {
                 a.closest("li").find(">ul.icesubMenu").addClass("visible");
                 return false
             }
-        })
+        });
         $('.icemegamenu li.parent>a').not('[href]').click(function () {
             var a = $(this);
             if (a.closest("li").hasClass("hover")) {
@@ -389,14 +389,14 @@ jQuery(function ($) {
                 a.closest("li").find(">ul.icesubMenu").addClass("visible");
                 return false
             }
-        })
+        });
         $('.icemegamenu li[class^="iceMenuLiLevel"]').not('.parent').find('>a.iceMenuTitle[href]').not('[href^="#"]').click(function () {
             var a = $(this);
             if (window.location.href.split("#")[0] == a.attr('href')) {
                 animate_body(a);
                 return false;
             }
-        })
+        });
         $('.icemegamenu li.parent[class^="iceMenuLiLevel"]').find('>a.iceMenuTitle[href]').not('[href^="#"]').click(function () {
             var a = $(this);
             if (a.closest("li").hasClass("hover")) {
@@ -424,11 +424,11 @@ jQuery(function ($) {
                 $(this).attr('data-hover', 'false');
                 a = $(this).find('>a');
                 hide_submenu(a);
-            })
+            });
         $('.icemegamenu li.iceMenuLiLevel_1>a.iceMenuTitle[href^="#"]').click(function () {
             var a = $(this);
             animate_body(a);
-        })
+        });
         $('.icemegamenu li[class^="iceMenuLiLevel"]>a.iceMenuTitle[href]').click(function () {
             var a = $(this);
             if (window.location.href.split("#")[0] == a.attr('href')) {
@@ -533,7 +533,7 @@ jQuery(function ($) {
                                     });
                                     e()
                                 })
-                            })
+                            });
                             z()
                         })
                     }
