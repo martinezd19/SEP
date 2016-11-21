@@ -1343,7 +1343,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             }
             ResultSet rs2 = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id='"+editId+"'");
             if(rs2.next()) {
-                oldName = rs2.getString("picture_path");
+                oldName = rs2.getString("picture_path").substring("images/inventory/".length());
             } else {
                 JOptionPane.showMessageDialog(warningPane, "Error getting SQL data", "Server error", JOptionPane.ERROR_MESSAGE);
                 setEnabledAllEdit(true);
@@ -1396,7 +1396,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             stmt.setString(2, descriptionTextAreaEdit.getText());
             stmt.setString(3, (String)categoryListEdit.getSelectedItem());
             stmt.setInt(4, Integer.parseInt((String)timePeriodComboEdit.getSelectedItem()));
-            stmt.setString(5, ("/images/inventory/"+fileName));
+            stmt.setString(5, ("images/inventory/"+fileName));
             stmt.setInt(6, (Integer)availableSpinnerEdit.getValue());
             stmt.setInt(7, (Integer)rentedSpinnerEdit.getValue());
             stmt.setBoolean(8, working);
@@ -1450,7 +1450,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(warningPane, "IO Error: "+ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-            String uploadPath = "/images/inventory/";
+            String uploadPath = "images/inventory/";
             String filePath = selectedFileEdit.getAbsolutePath();
             File uploadFile = new File(filePath);
             uploadProgressBarEdit.setValue(0);
@@ -1459,11 +1459,13 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             task.addPropertyChangeListener(this);
             task.execute();
         } else {
+            System.out.println("jkasdfhjklasdhljkfhljk");
             String host = prefs.get(HOST, "127.0.0.1");
             int port = Integer.parseInt(prefs.get(PORT, "8080"));
             String username = prefs.get(USERNAME_FTP, "root");
             String password = prefs.get(PASSWORD_FTP, "");
-            String uploadPath = "/images/inventory/";
+            String uploadPath = "images/inventory/";
+            System.out.println(oldName+"; "+fileName);
             renameTask task = new renameTask(host, port, username, password,
                 uploadPath, oldName, fileName);
             task.execute();
@@ -1922,7 +1924,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         int port = Integer.parseInt(prefs.get(PORT, "8080"));
         String username = prefs.get(USERNAME_FTP, "root");
         String password = prefs.get(PASSWORD_FTP, "");
-        String uploadPath = "/images/inventory/";
+        String uploadPath = "images/inventory/";
         String filePath = selectedFile.getAbsolutePath();
         File uploadFile = new File(filePath);
         uploadProgressBar.setValue(0);

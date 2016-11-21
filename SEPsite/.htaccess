@@ -15,3 +15,6 @@ deny from all
 
 #Prevent directory listings
 Options All -Indexes
+
+#Include PHP logger
+php_value include_path "/config/chromephp.php"

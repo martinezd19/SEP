@@ -19,42 +19,54 @@
       <mandatory>1</mandatory>
       <data-type>varchar(255)|0</data-type>
     </column>
-    <column id="10" parent="7" name="description">
+    <column id="10" parent="7" name="title_first_letter">
+      <mandatory>1</mandatory>
+      <data-type>tinytext|0</data-type>
+    </column>
+    <column id="11" parent="7" name="description">
       <mandatory>1</mandatory>
       <data-type>varchar(255)|0</data-type>
     </column>
-    <column id="11" parent="7" name="category">
+    <column id="12" parent="7" name="category">
       <mandatory>1</mandatory>
       <data-type>varchar(255)|0</data-type>
     </column>
-    <column id="12" parent="7" name="time_period">
+    <column id="13" parent="7" name="time_period">
       <mandatory>1</mandatory>
       <data-type>int(4)|0</data-type>
     </column>
-    <column id="13" parent="7" name="picture_path">
+    <column id="14" parent="7" name="picture_path">
       <mandatory>1</mandatory>
       <data-type>varchar(255)|0</data-type>
     </column>
-    <column id="14" parent="7" name="num_available">
+    <column id="15" parent="7" name="num_available">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="15" parent="7" name="num_rented">
+    <column id="16" parent="7" name="num_rented">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="16" parent="7" name="working">
+    <column id="17" parent="7" name="working">
       <mandatory>1</mandatory>
       <data-type>tinyint(1)|0</data-type>
     </column>
-    <column id="17" parent="7" name="date_updated">
+    <column id="18" parent="7" name="date_updated">
       <mandatory>1</mandatory>
       <data-type>timestamp|0</data-type>
       <default-expression>CURRENT_TIMESTAMP</default-expression>
     </column>
-    <key id="18" parent="7" name="PRIMARY">
+    <key id="19" parent="7" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
+    <trigger id="20" parent="7" name="titles_insert">
+      <trig-events>I</trig-events>
+      <trig-turn>BEFORE_ROW</trig-turn>
+    </trigger>
+    <trigger id="21" parent="7" name="titles_update">
+      <trig-events>U</trig-events>
+      <trig-turn>BEFORE_ROW</trig-turn>
+    </trigger>
   </database-model>
 </dataSource>

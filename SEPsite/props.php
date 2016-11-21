@@ -558,12 +558,6 @@ if ($conn->connect_errno) {
 							<div id="component" class="span12">
 								<main role="main">
 
-									<div id="system-message-container">
-									</div>
-
-									<section class="page-category page-category__faqs">
-									</section>
-
 									<!-- Content-bottom -->
 									<div id="content-bottom" class="row-fluid">
 										<div class="moduletable accordion accordion_style1  span12">
@@ -588,15 +582,16 @@ if ($conn->connect_errno) {
 													</div>
 													<div class="prop-select" onchange="displayProps()">
 														<select id="descAscSelect">
-															<option disabled selected value="1">Select descending/ascending
+															<option disabled selected value="ASC">Select descending/ascending
 															</option>
-															<option value="1">Ascending</option>
-															<option value="0">Descending</option>
+															<option value="ASC">Ascending</option>
+															<option value="DESC">Descending</option>
 														</select>
 													</div>
 													<div class="prop-select" onchange="displayProps()">
 														<select id="categorySelect">
 															<option disabled selected value="">Select category</option>
+															<option value="">Any category</option>
 															<?php
 															$sql = "SELECT DISTINCT category FROM inventory ORDER BY category ASC";
 															$result = $conn->query($sql);
@@ -608,60 +603,30 @@ if ($conn->connect_errno) {
 														</select>
 													</div>
 												</div>
-												<div
-														class="mod-bootstrap-collapse mod-bootstrap-collapse__accordion accordion_style1">
-
-
-													<div class="accordion" id="accordion173">
-
+												<div class="mod-bootstrap-collapse mod-bootstrap-collapse__accordion accordion_style1" id="prop-accordion">
+													<div class="accordion" id="accordion1">
 														<div class="accordion-group">
 															<!-- Item title -->
 															<div class="accordion-heading">
-																<a href="#collapse_173_44" class="accordion-toggle "
-																   data-toggle="collapse" data-parent="#accordion173">
-																	1980 </a>
+																<a href="#collapse_1" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1">1980</a>
 															</div>
-
-															<div id="collapse_173_44" class="accordion-body collapse ">
+															<div id="collapse_1" class="accordion-body collapse ">
 																<div class="accordion-inner">
 																	<div class="inventory">
-																		<img class="prop-img" src="images/prop-img.jpg"
-																		     alt="title"/>
-																		<p class="prop-text" id="clamp"><b>WWWWWWWWWWWWWWWWWWWW</b><br>This
-																		                                                               is
-																		                                                               a
-																		                                                               description
-																		</p>
-																		<p class="prop-id"><b>Category:</b> Computer,
-																			<b>Working:</b> Yes, <b>ID:</b> 38749</p>
-																		<p class="prop-cat"><b>Time Period:</b> 1970,
-																			<b>Available: </b>3, <b
-																					class="red">Rented: </b>2</p>
+																		<img class="prop-img" src="images/prop-img.jpg" alt="Item preview"/>
+																		<p class="prop-text" id="clamp"><b>WWWWWWWWWWWWWWWWWWWW</b><br>This is a description</p>
+																		<p class="prop-id"><b>Category: </b>Computer,<b> Working: </b>Yes,<b> ID: </b>38749</p>
+																		<p class="prop-cat"><b>Time Period: </b>1970, <b>Available: </b>3,<b class="red"> Rented: </b>2</p>
 																	</div>
 																	<div class="inventory">
-																		<img class="prop-img" src="images/img_404.png"
-																		     alt="title"/>
-																		<p class="prop-text"><b>This is a title</b><br>This
-																		                                               is
-																		                                               a
-																		                                               description
-																		</p>
-																		<p class="prop-id"><b>Category:</b> Computer, <b
-																					class="red">Working:</b> No, <b>ID:</b>
-																		                                    38749</p>
-																		<p class="prop-cat"><b>Time Period:</b> 1970,
-																			<b>Available: </b>3, <b
-																					class="red">Rented: </b>2, </p>
+																		<img class="prop-img" src="images/img_404.png" alt="Item preview"/>
+																		<p class="prop-text"><b>This is a title</b><br>This is a description</p>
+																		<p class="prop-id"><b>Category: </b>Computer,<b class="red"> Working: </b>No,<b> ID: </b>38749</p>
+																		<p class="prop-cat"><b>Time Period: </b>1970,<b> Available: </b>3,<b class="red"> Rented: </b>2</p>
 																	</div>
 																</div>
 															</div>
 														</div>
-														<div class="accordion-group">
-															<!-- Item title -->
-
-
-														</div>
-
 													</div>
 												</div>
 											</div>

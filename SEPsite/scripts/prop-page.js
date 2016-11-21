@@ -1,18 +1,31 @@
 function displayProps() {
     var temp = document.getElementById("sortBySelect");
-    var sortBy = temp.options[temp.selectedIndex].text;
+    temp.disabled = true;
+    var sortBy = temp.options[temp.selectedIndex].value;
     temp = document.getElementById("workingSelect");
-    var working = temp.options[temp.selectedIndex].text;
+    temp.disabled = true;
+    var working = temp.options[temp.selectedIndex].value;
     temp = document.getElementById("descAscSelect");
-    var descAsc = temp.options[temp.selectedIndex].text;
+    temp.disabled = true;
+    var descAsc = temp.options[temp.selectedIndex].value;
     temp = document.getElementById("categorySelect");
-    var category = temp.options[temp.selectedIndex].text;
+    temp.disabled = true;
+    var category = temp.options[temp.selectedIndex].value;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if(this.readyState == 4 && this.status == 200) {
-            document.getElementById("accordion173").innerHTML = this.responseText;
+            document.getElementById("prop-accordion").innerHTML = this.responseText;
+            var temp = document.getElementById("sortBySelect");
+            temp.disabled = false;
+            temp = document.getElementById("workingSelect");
+            temp.disabled = false;
+            temp = document.getElementById("descAscSelect");
+            temp.disabled = false;
+            temp = document.getElementById("categorySelect");
+            temp.disabled = false;
         }
-    }
-    xmlhttp.open("GET", "return-prop-html.php?sort="+sortBy+"&working="+working+"&asc="+descAsc+"&category="+category, true);
+    };
+    console.log("scripts/return-prop-html.php?sort="+sortBy+"&working="+working+"&asc="+descAsc+"&category="+category);
+    xmlhttp.open("GET", "scripts/return-prop-html.php?sort="+sortBy+"&working="+working+"&asc="+descAsc+"&category="+category, true);
     xmlhttp.send();
 }

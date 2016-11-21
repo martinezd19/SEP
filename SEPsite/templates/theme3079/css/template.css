@@ -12552,11 +12552,6 @@ span.select select {
     padding-right: 60px;
 }
 
-span.select select:disabled {
-    background: #f7f7f7;
-    position: static;
-}
-
 .moduletable.careers_form span.select {
     width: 100%;
 }
