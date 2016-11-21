@@ -11,11 +11,14 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImagingOpException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,6 +55,8 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
     private final String PORT = "port";
     private final String USERNAME_FTP = "usernameftp";
     private final String PASSWORD_FTP = "passwordftp";
+    private final int PICTURE_SIZE = 200;
+    private final int LARGE_PICTURE_SIZE = 1500;
     private String editTitle = "";
     private boolean sqlPassShowToggle = false;
     private boolean ftpPassShowToggle = false;
@@ -1343,7 +1348,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             }
             ResultSet rs2 = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id='"+editId+"'");
             if(rs2.next()) {
-                oldName = rs2.getString("picture_path").substring("images/inventory/".length());
+                try {
+                    oldName = URLDecoder.decode(rs2.getString("picture_path").substring("images/inventory/".length()), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    JOptionPane.showMessageDialog(warningPane, "Cannot decode SQL entry:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 JOptionPane.showMessageDialog(warningPane, "Error getting SQL data", "Server error", JOptionPane.ERROR_MESSAGE);
                 setEnabledAllEdit(true);
@@ -1359,16 +1368,18 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             System.exit(0);
         }       
         String fileName = titleFieldEdit.getText().toLowerCase();
-        if(oldName != null) {
-            try {
-                fileName = URLEncoder.encode(fileName, "UTF-8");
-                fileName += "."+((selectedFileEdit != null) ? (FilenameUtils.getExtension(selectedFileEdit.getAbsolutePath()).toLowerCase()) : (oldName.substring(oldName.indexOf(".")+1)));
-            } catch(Exception e) {
-                JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
-                setEnabledAllEdit(true);
-                setTabs(true, EDIT_PANE_INDEX);
-                return;
-            }
+        String fileNameSql = titleFieldEdit.getText().toLowerCase();
+        try {
+            fileName = URLEncoder.encode(fileName, "UTF-8");
+            fileNameSql = URLEncoder.encode(fileName, "UTF-8");
+            String extension = ".jpg";
+            fileName += extension;
+            fileNameSql += extension;
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
+            setEnabledAllEdit(true);
+            setTabs(true, EDIT_PANE_INDEX);
+            return;
         }
         updating = true;
         boolean working;
@@ -1396,7 +1407,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             stmt.setString(2, descriptionTextAreaEdit.getText());
             stmt.setString(3, (String)categoryListEdit.getSelectedItem());
             stmt.setInt(4, Integer.parseInt((String)timePeriodComboEdit.getSelectedItem()));
-            stmt.setString(5, ("images/inventory/"+fileName));
+            stmt.setString(5, ("images/inventory/"+fileNameSql));
             stmt.setInt(6, (Integer)availableSpinnerEdit.getValue());
             stmt.setInt(7, (Integer)rentedSpinnerEdit.getValue());
             stmt.setBoolean(8, working);
@@ -1437,8 +1448,9 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                     return;
                 }
 
-                boolean deleted = ftp.deleteFile(oldName);
-                if(!deleted) {
+                boolean deleted = ftp.deleteFile("images/inventory/"+oldName);
+                boolean deleted2 = ftp.deleteFile("images/inventory/original/"+oldName);
+                if(!(deleted && deleted2)) {
                     JOptionPane.showMessageDialog(warningPane, "Could not delete FTP", "Error", JOptionPane.ERROR_MESSAGE);
                     setEnabledAllEdit(true);
                     setTabs(true, EDIT_PANE_INDEX);
@@ -1451,24 +1463,45 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "IO Error: "+ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
             String uploadPath = "images/inventory/";
+            String uploadPathOrig = "images/inventory/original/";
             String filePath = selectedFileEdit.getAbsolutePath();
             File uploadFile = new File(filePath);
-            uploadProgressBarEdit.setValue(0);
-            UploadTask task = new UploadTask(host, port, username, password,
-                uploadPath, uploadFile, fileName);
-            task.addPropertyChangeListener(this);
-            task.execute();
+            try {
+                BufferedImage img = ImageIO.read(uploadFile);
+                int resizeSize = ((int)((((double)Math.max(img.getWidth(), img.getHeight()))/Math.min(img.getWidth(), img.getHeight()))*PICTURE_SIZE));
+                BufferedImage scaledImage =  Scalr.crop(Scalr.resize(img, resizeSize), PICTURE_SIZE, PICTURE_SIZE);
+                File temp = File.createTempFile("temp-img", ".jpg");
+                temp.deleteOnExit();
+                ImageIO.write(scaledImage, "jpg", temp);
+                resizeSize = ((int)((((double)Math.max(img.getWidth(), img.getHeight()))/Math.min(img.getWidth(), img.getHeight()))*LARGE_PICTURE_SIZE));
+                scaledImage =  Scalr.crop(Scalr.resize(img, resizeSize), LARGE_PICTURE_SIZE, LARGE_PICTURE_SIZE);
+                File tempOrig = File.createTempFile("temp-img", ".jpg");
+                tempOrig.deleteOnExit();
+                ImageIO.write(scaledImage, "jpg", tempOrig);
+                uploadProgressBarEdit.setValue(0);
+                UploadTask task = new UploadTask(host, port, username, password,
+                    uploadPath, temp, fileName);
+                UploadTask taskOrig = new UploadTask(host, port, username, password,
+                    uploadPathOrig, tempOrig, fileName);
+                taskOrig.addPropertyChangeListener(this);
+                taskOrig.execute();
+                task.execute();
+                } catch (IOException | IllegalArgumentException | ImagingOpException e) {
+                JOptionPane.showMessageDialog(warningPane, "Image Error", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
-            System.out.println("jkasdfhjklasdhljkfhljk");
             String host = prefs.get(HOST, "127.0.0.1");
             int port = Integer.parseInt(prefs.get(PORT, "8080"));
             String username = prefs.get(USERNAME_FTP, "root");
             String password = prefs.get(PASSWORD_FTP, "");
             String uploadPath = "images/inventory/";
-            System.out.println(oldName+"; "+fileName);
+            String uploadPathOrig = "images/inventory/original/";
             renameTask task = new renameTask(host, port, username, password,
                 uploadPath, oldName, fileName);
+            renameTask taskOrig = new renameTask(host, port, username, password,
+                uploadPathOrig, oldName, fileName);
             task.execute();
+            taskOrig.execute();
             
             try {
                 if(initialized && tabPane.getSelectedIndex() == 0 || tabPane.getSelectedIndex() == 1) {
@@ -1541,7 +1574,9 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
-            ResultSet rs = createStatement().executeQuery("SELECT id FROM inventory WHERE title='"+(String)selectItemComboBox.getSelectedItem()+"'");
+            PreparedStatement stmt = conn.prepareStatement("SELECT id FROM inventory WHERE title=?");
+            stmt.setString(1, (String)selectItemComboBox.getSelectedItem());
+            ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
                 populateData(rs.getInt("id"));
             }
@@ -1559,7 +1594,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         //Delete image
         boolean fullyDeleted  = true;
         boolean foundFile = false;
-        String deletePath = "";
+        String oldName = "";
         try {
             try {
                 if(!conn.isValid(0)) {
@@ -1572,11 +1607,15 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
                 JOptionPane.showMessageDialog(warningPane, "Critical SQL Error, restarting", "Warning", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
+            
             ResultSet rs = createStatement().executeQuery("SELECT picture_path FROM inventory WHERE id="+editId);
             if(rs.next()) {
-                deletePath = rs.getString("picture_path");
-                System.out.println(deletePath);
-                foundFile = true;
+                try {
+                    oldName = URLDecoder.decode(rs.getString("picture_path").substring("images/inventory/".length()), "UTF-8");
+                    foundFile = true;
+                } catch (UnsupportedEncodingException e) {
+                    JOptionPane.showMessageDialog(warningPane, "Cannot decode SQL entry:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } catch(SQLException ex) {
             // handle any errors
@@ -1608,8 +1647,11 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             }
             
             if(foundFile) {
-                boolean deleted = ftp.deleteFile(deletePath);
-                if(!deleted) {
+                String deletePath = "images/inventory/";
+                String deletePathOrig = "images/inventory/original/";
+                boolean deleted = ftp.deleteFile(deletePath+oldName);
+                boolean deleted2 = ftp.deleteFile(deletePathOrig+oldName);
+                if(!(deleted && deleted2)) {
                     JOptionPane.showMessageDialog(warningPane, "Could not delete FTP", "Error", JOptionPane.ERROR_MESSAGE);
                     fullyDeleted = false;
                 }
@@ -1871,9 +1913,13 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             return;
         }
         String fileName = titleField.getText().toLowerCase();
+        String fileNameSql = titleField.getText().toLowerCase();
         try {
             fileName = URLEncoder.encode(fileName, "UTF-8");
-            fileName += "."+(FilenameUtils.getExtension(selectedFile.getAbsolutePath()).toLowerCase());
+            fileNameSql = URLEncoder.encode(fileName, "UTF-8");
+            String extension = ".jpg";
+            fileName += extension;
+            fileNameSql += extension;
         } catch(Exception e) {
             JOptionPane.showMessageDialog(warningPane, "Error encoding title. Please try a different title", "Internal error", JOptionPane.ERROR_MESSAGE);
             setEnabledAllCreate(true);
@@ -1906,7 +1952,7 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
             stmt.setString(2, descriptionTextArea.getText());
             stmt.setString(3, (String)categoryList.getSelectedItem());
             stmt.setInt(4, Integer.parseInt((String)timePeriodCombo.getSelectedItem()));
-            stmt.setString(5, ("images/inventory/"+fileName));
+            stmt.setString(5, ("images/inventory/"+fileNameSql));
             stmt.setInt(6, (Integer)availableSpinner.getValue());
             stmt.setInt(7, (Integer)rentedSpinner.getValue());
             stmt.setBoolean(8, working);
@@ -1925,13 +1971,33 @@ public class NewJFrame extends javax.swing.JFrame implements PropertyChangeListe
         String username = prefs.get(USERNAME_FTP, "root");
         String password = prefs.get(PASSWORD_FTP, "");
         String uploadPath = "images/inventory/";
+        String uploadPathOrig = "images/inventory/original/";
         String filePath = selectedFile.getAbsolutePath();
+        Scalr scale = new Scalr();
         File uploadFile = new File(filePath);
-        uploadProgressBar.setValue(0);
-        UploadTask task = new UploadTask(host, port, username, password,
-            uploadPath, uploadFile, fileName);
-        task.addPropertyChangeListener(this);
-        task.execute();
+        try {
+            BufferedImage img = ImageIO.read(uploadFile);
+            int resizeSize = ((int)((((double)Math.max(img.getWidth(), img.getHeight()))/Math.min(img.getWidth(), img.getHeight()))*PICTURE_SIZE));
+            BufferedImage scaledImage =  Scalr.crop(Scalr.resize(img, resizeSize), PICTURE_SIZE, PICTURE_SIZE);
+            File temp = File.createTempFile("temp-img", ".jpg");
+            temp.deleteOnExit();
+            ImageIO.write(scaledImage, "jpg", temp);
+            resizeSize = ((int)((((double)Math.max(img.getWidth(), img.getHeight()))/Math.min(img.getWidth(), img.getHeight()))*LARGE_PICTURE_SIZE));
+            scaledImage =  Scalr.crop(Scalr.resize(img, resizeSize), LARGE_PICTURE_SIZE, LARGE_PICTURE_SIZE);
+            File tempOrig = File.createTempFile("temp-img", ".jpg");
+            tempOrig.deleteOnExit();
+            ImageIO.write(scaledImage, "jpg", tempOrig);
+            uploadProgressBar.setValue(0);
+            UploadTask task = new UploadTask(host, port, username, password,
+                uploadPath, temp, fileName);
+            UploadTask taskOrig = new UploadTask(host, port, username, password,
+                uploadPathOrig, tempOrig, fileName);
+            taskOrig.addPropertyChangeListener(this);
+            taskOrig.execute();
+            task.execute();
+        } catch (IOException | IllegalArgumentException | ImagingOpException e) {
+            JOptionPane.showMessageDialog(warningPane, "Error with image", "Warning", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_submitNewButtonActionPerformed
 
     private void timePeriodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timePeriodComboActionPerformed

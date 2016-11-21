@@ -27,7 +27,6 @@ public class GetSQL {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (Exception ex) {}
         try {
-            System.out.println(server);
             conn = DriverManager.getConnection(server, username, password);
             connectionGood = true;
         } catch (SQLException ex) {

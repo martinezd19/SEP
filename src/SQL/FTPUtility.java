@@ -95,9 +95,6 @@ public class FTPUtility {
                 throw new FTPException("Could not change working directory to "
                         + dir + ". The directory may not exist.");
             }
-            System.out.println(dir);
-            System.out.println(oldName);
-            System.out.println(newName);
             success = ftpClient.rename(oldName, newName);
             if (!success) {
                 throw new FTPException("Could not rename file.");
