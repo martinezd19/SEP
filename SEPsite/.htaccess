@@ -5,7 +5,7 @@ RewriteCond %{HTTP_HOST} ^sunshineeprops.com[nc]
 RewriteRule ^(.*)$ http://www.sunshineeprops.com/$1 [r=301,nc]
 
 #Change default directory page
-DirectoryIndex index.html
+DirectoryIndex index.php
 
 #Prevent viewing of .htaccess file
 <Files .htaccess>
