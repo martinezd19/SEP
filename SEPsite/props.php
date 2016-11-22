@@ -1,20 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
-
-<!-- Mirrored from localhost:8012/joomla/pages/pages/faqs by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Jun 2016 21:41:15 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=utf-8"/><!-- /Added by HTTrack -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html" xml:lang="en-gb" lang="en-gb">
+<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <head>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,400italic,500,700,900' rel='stylesheet'
 	      type='text/css'>
 	<base/>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<meta name="generator" content="Joomla! - Open Source Content Management"/>
-	<title>AIO Inspections - FAQs</title>
-	<link href="pages/pages/faqsc0d0?format=feed&amp;type=rss" rel="alternate" type="application/rss+xml"
-	      title="RSS 2.0"/>
-	<link href="pages/pages/faqs7b17?format=feed&amp;type=atom" rel="alternate" type="application/atom+xml"
-	      title="Atom 1.0"/>
+	<title>Props</title>
 	<link href="templates/theme3079/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
 	<link rel="stylesheet" href="templates/theme3079/css/layout.css" type="text/css"/>
 	<link rel="stylesheet" href="templates/theme3079/css/jquery.fancybox.css" type="text/css"/>
@@ -41,54 +35,16 @@
 	<script src="modules/mod_tm_ajax_contact_form/js/ajaxsendmail.js" type="text/javascript"></script>
 	<script src="templates/theme3079/html/mod_icemegamenu/js/menu.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="css/prop-page.css" type="text/css"/>
-	<script type="text/javascript" src="scripts/prop-page.js"/>
+
+	<script type="text/javascript" src="scripts/prop-page.js"></script>
 	<script type="text/javascript">
 		jQuery(window).on('load', function () {
-			new JCaption('img.caption');
+			displayProps();
 		});
-		jQuery(document).ready(function () {
-			jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-		});
-		(function ($) {
-			$(document).ready(function () {
-				autosize($("textarea"))
-			})
-		})(jQuery);
-		(function ($) {
-			$(document).ready(function () {
-				var v = $("#contact-form_189").validate({
-					wrapper: "mark", submitHandler: function (f) {
-						$(f).ajaxsendmail();
-						return false
-					}
-				});
-				$("#message_2").rules("add", {minlength: 50});
-			})
-		})(jQuery);
-		window.setInterval(function () {
-			var r;
-			try {
-				r = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP")
-			} catch (e) {
-			}
-			if (r) {
-				r.open("../404.html", "../../index86dd.php?option=com_ajax&amp;format=json", true);
-				r.send(null)
-			}
-		}, 840000);
 	</script>
 
 </head>
-<body class=" com_content view-category task- itemid-138 body__faqs">
-<!--[if lt IE 9]
-<div style=' clear: both; text-align:center; position: relative;'>
-  <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-    <img src="/joomla/templates/theme3079/images/warning_bar_0000_us.jpg" border="0" height="42" width="820"
-         alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."/>
-  </a>
-</div>
-<![endif]-->
-<!-- Body -->
+<body id="body">
 <?php
 //Import login information from config file
 $login = include('config/config.php');
@@ -104,92 +60,6 @@ if ($conn->connect_errno) {
 <div id="wrapper">
 	<div class="wrapper-inner">
 
-
-		<div id="fixed-sidebar-right">
-			<div class="moduletable login">
-				<!--
-				<i class="fa fa-user"></i>
-
-				<div class="login_box">
-
-
-					<h5 class="">Login or register</h5>
-					<form action="http://localhost:8012/joomla/index.php/pages/faqs" method="post" id="login-form"
-								class="form-inline">
-						<div class="mod-login_userdata">
-							<div id="form-login-username" class="control-group">
-								<div class="controls">
-									<div class="input-prepend">
-						<span class="add-on">
-							<span class="fa fa-user hasTooltip" title="Username"></span>
-							<label for="modlgn-username" class="element-invisible">Username</label>
-						</span>
-										<input id="modlgn-username" type="text" name="username"
-													 class="input-small placeholder" tabindex="0" size="18"
-													 placeholder="Username" required/>
-									</div>
-								</div>
-							</div>
-							<div id="form-login-password" class="control-group">
-								<div class="controls">
-									<div class="input-prepend">
-						<span class="add-on">
-							<span class="fa fa-lock hasTooltip" title="Password">
-							</span>
-								<label for="modlgn-passwd" class="element-invisible">Password              </label>
-						</span>
-										<input id="modlgn-passwd" type="password" name="password"
-													 class="input-small placeholder" tabindex="0" size="18"
-													 placeholder="Password" required/>
-									</div>
-								</div>
-							</div>
-							<div class="mod-login_submit">
-								<button type="submit" tabindex="3" name="Submit" class="btn btn-primary">Login</button>
-								<a class="btn btn-primary register" href="../user-registration.html">Register</a>
-							</div>
-							<input type="hidden" name="option" value="com_users">
-							<input type="hidden" name="task" value="user.login">
-							<input type="hidden" name="return" value="aW5kZXgucGhwP0l0ZW1pZD0xMzg=">
-							<input type="hidden" name="547566cb2c9b761e03de1837002c2431" value="1"/> <label
-										for="mod-login_remember107" class="checkbox">
-							<input id="mod-login_remember107" class="mod-login_remember" type="checkbox" name="remember"
-										 value="yes">
-							Remember my password </label>
-							<div class="reset_remind">
-								Forgot <a href="../username-reminder-request.html" class="hasTooltip">username</a>/
-								<a href="../password-reset.html" class="hasTooltip">password</a>?
-							</div>
-						</div>
-					</form>
-					<div class="lr_social_login_basic_150">
-						<div class="lr_providers">
-							<div class="lr_icons_box">
-								<div>
-									<a class="lr_providericons lr_facebook" href="javascript:void(0);"
-										 onclick="javascript:window.open('http://www.facebook.com/dialog/oauth?client_id=930899133604868&amp;redirect_uri=http://localhost:8012/joomla/?provider=facebook&amp;display=popup&amp;scope=email,user_photos,user_about_me,user_hometown,user_photos','Facebook','toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=400px,height=400px');"
-										 rel="nofollow" title="Login with Facebook">Login with Facebook</a>
-								</div>
-								<div>
-									<a class="lr_providericons lr_google" href="javascript:void(0);"
-										 onclick="javascript:window.open('https://accounts.google.com/o/oauth2/auth?response_type=code&amp;redirect_uri=http://localhost:8012/joomla/?provider=google&amp;client_id=4ea43331a8b16c6ddb33685fc03635a8&amp;scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email','Google','toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=400px,height=400px');"
-										 rel="nofollow" title="Login with Google +">Login with Google +</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div> -->
-
-				<script>
-					jQuery(function ($) {
-						$('.moduletable.login>i.fa-user').click(function () {
-							$('.moduletable.login').toggleClass('shown')
-						});
-					})
-				</script>
-			</div>
-		</div>
-
 		<div class="bg_top">
 			<!-- Top -->
 			<div id="top">
@@ -198,7 +68,7 @@ if ($conn->connect_errno) {
 						<div class="row-fluid">
 							<!-- Logo -->
 							<div id="logo" class="span3">
-								<a href="index.html">
+								<a href="index.php">
 									<img src="images/logo.png" alt="AIO Inspections">
 									<h1>AIO Inspections</h1>
 								</a>
@@ -211,7 +81,7 @@ if ($conn->connect_errno) {
 										<div class="nav-collapse icemegamenu collapse left ">
 											<ul id="icemegamenu" class="meganizr mzr-slide mzr-responsive">
 												<li id="iceMenu_101" class="iceMenuLiLevel_1 mzr-drop parent fullwidth">
-													<a href="index.html" class=" iceMenuTitle "><span
+													<a href="index.php" class=" iceMenuTitle "><span
 																class="icemega_title icemega_nosubtitle">Home</span></a>
 													<ul class="icesubMenu icemodules sub_level_1" style="width:100%">
 														<li>
@@ -410,7 +280,7 @@ if ($conn->connect_errno) {
 														</li>
 													</ul>
 												</li>
-												<li id="iceMenu_134" class="iceMenuLiLevel_1 "><a href="about.html"
+												<li id="iceMenu_134" class="iceMenuLiLevel_1 "><a href="about.php"
 												                                                  class=" iceMenuTitle "><span
 																class="icemega_title icemega_nosubtitle">About</span></a>
 												</li>
@@ -539,7 +409,7 @@ if ($conn->connect_errno) {
 						<div class="moduletable   span12">
 							<div class="module_container">
 								<ul class="breadcrumb">
-									<li><a href="index.html" class="pathway">Home</a><span
+									<li><a href="index.php" class="pathway">Home</a><span
 												class="divider">&nbsp;|&nbsp;</span>
 									</li>
 									<li class="active"><span>FAQs</span></li>
@@ -565,8 +435,8 @@ if ($conn->connect_errno) {
 												<div class="prop-container" id="prop-container">
 													<div class="prop-select">
 														<select id="sortBySelect" onchange="displayProps()">
-															<option disabled selected value="title">Sort by</option>
-															<option value="title">Title</option>
+															<option disabled selected value="title_first_letter">Sort by</option>
+															<option value="title_first_letter">Title</option>
 															<option value="time_period">Time period</option>
 															<option value="category">Category</option>
 														</select>
@@ -604,30 +474,6 @@ if ($conn->connect_errno) {
 													</div>
 												</div>
 												<div class="mod-bootstrap-collapse mod-bootstrap-collapse__accordion accordion_style1" id="prop-accordion">
-													<div class="accordion" id="accordion1">
-														<div class="accordion-group">
-															<!-- Item title -->
-															<div class="accordion-heading">
-																<a href="#collapse_1" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1">1980</a>
-															</div>
-															<div id="collapse_1" class="accordion-body collapse ">
-																<div class="accordion-inner">
-																	<div class="inventory">
-																		<img class="prop-img" src="images/prop-img.jpg" alt="Item preview"/>
-																		<p class="prop-text" id="clamp"><b>WWWWWWWWWWWWWWWWWWWW</b><br>This is a description</p>
-																		<p class="prop-id"><b>Category: </b>Computer,<b> Working: </b>Yes,<b> ID: </b>38749</p>
-																		<p class="prop-cat"><b>Time Period: </b>1970, <b>Available: </b>3,<b class="red"> Rented: </b>2</p>
-																	</div>
-																	<div class="inventory">
-																		<img class="prop-img" src="images/img_404.png" alt="Item preview"/>
-																		<p class="prop-text"><b>This is a title</b><br>This is a description</p>
-																		<p class="prop-id"><b>Category: </b>Computer,<b class="red"> Working: </b>No,<b> ID: </b>38749</p>
-																		<p class="prop-cat"><b>Time Period: </b>1970,<b> Available: </b>3,<b class="red"> Rented: </b>2</p>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
 												</div>
 											</div>
 										</div>
@@ -784,95 +630,7 @@ if ($conn->connect_errno) {
 <div id="back-top">
 	<a href="#"><span></span> </a>
 </div>
-<div id="modal" class="modal hide fade loginPopup">
-	<div class="modal-hide"></div>
-	<div class="modal_wrapper">
-		<button type="button" class="close modalClose">×</button>
-		<div class="moduletable ">
-			<div class="modal-body">
 
-				<!-- begin olark code
-				<script data-cfasync="false" type='text/javascript'>/*<![CDATA[*/
-				window.olark || (function (c) {
-					var f = window, d = document, l = f.location.protocol == "https:" ? "https:" : "http:", z = c.name, r = "load";
-					var nt = function () {
-						f[z] = function () {
-							(a.s = a.s || []).push(arguments)
-						};
-						var a = f[z]._ = {}, q = c.methods.length;
-						while (q--) {
-							(function (n) {
-								f[z][n] = function () {
-									f[z]("call", n, arguments)
-								}
-							})(c.methods[q])
-						}
-						a.l = c.loader;
-						a.i = nt;
-						a.p = {
-							0: +new Date
-						};
-						a.P = function (u) {
-							a.p[u] = new Date - a.p[0]
-						};
-						function s() {
-							a.P(r);
-							f[z](r)
-						}
-
-						f.addEventListener ? f.addEventListener(r, s, false) : f.attachEvent("on" + r, s);
-						var ld = function () {
-							function p(hd) {
-								hd = "head";
-								return ["<", hd, "></", hd, "><", i, ' onl' + 'oad="var d=', g, ";d.getElementsByTagName('head')[0].", j, "(d.", h, "('script')).", k, "='", l, "//", a.l, "'", '"', "></", i, ">"].join("")
-							}
-
-							var i = "body", m = d[i];
-							if (!m) {
-								return setTimeout(ld, 100)
-							}
-							a.P(1);
-							var j = "appendChild", h = "createElement", k = "src", n = d[h]("div"), v = n[j](d[h](z)), b = d[h]("iframe"), g = "document", e = "domain", o;
-							n.style.display = "none";
-							m.insertBefore(n, m.firstChild).id = z;
-							b.frameBorder = "0";
-							b.id = z + "-loader";
-							if (/MSIE[ ]+6/.test(navigator.userAgent)) {
-								b.src = "javascript:false"
-							}
-							b.allowTransparency = "true";
-							v[j](b);
-							try {
-								b.contentWindow[g].open()
-							} catch (w) {
-								c[e] = d[e];
-								o = "javascript:var d=" + g + ".open();d.domain='" + d.domain + "';";
-								b[k] = o + "void(0);"
-							}
-							try {
-								var t = b.contentWindow[g];
-								t.write(p());
-								t.close()
-							} catch (x) {
-								b[k] = o + 'd.write("' + p().replace(/"/g, String.fromCharCode(92) + '"') + '");d.close();'
-							}
-							a.P(2)
-						};
-						ld()
-					};
-					nt()
-				})({
-					loader: "static.olark.com/jsclient/loader0.js",
-					name: "olark",
-					methods: ["configure", "extend", "declare", "identify"]
-				});
-				/* custom configuration goes here (www.olark.com/documentation) */
-				olark.identify('5615-604-10-1042');
-				/*]]>*/</script>
-				<!-- end olark code --></div>
-		</div>
-	</div>
-</div>
 
 
 <script src="templates/theme3079/js/jquery.modernizr.min.js"></script>

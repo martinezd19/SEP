@@ -1,0 +1,193 @@
+<div id="footer">
+	<div class="row-container">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="moduletable FAQ  span6">
+					<div class="module_container">
+						<header><h3 class="moduleTitle "><span>Contact Info</span>
+						</h3></header>
+						<div class="mod-article-single mod-article-single__FAQ" id="module_191">
+							<div class="item__module" id="item_130">
+								
+								<!-- Intro Text -->
+								<div class="item_introtext">
+									<p><b style="color: #FFFFFF;">Hours: </b>Monday - Friday, 9 A.M. - 5 P.M.
+										<br>
+		                 Feel free to call us at anytime during our business hours. If you need to contact us outside of business hours,
+		                 please fill out the form to the right, and we will email you back as soon as possible. Our response will be sent
+		                 to the email you input, so please ensure that you put in your actual email.
+									</p>
+									<ul class="FAQ">
+										<li class="address">
+											1015 E 23rd St, Hialeah, FL, 33013</li>
+										<li class="phone">305-702-7331</li>
+										<li class="mail">sunshineprops@se.org</li>
+									</ul>
+									<p>
+									<div class="moduletablesocial span12">
+										
+										<div class="mod-menu mod-menu__social">
+											<ul class="nav menu ">
+												<li class="item-148"><a class="fa fa-facebook hasTooltip"
+												                        href="#" title="Facebook"></a>
+												</li>
+												<li class="item-150"><a class="fa fa-twitter hasTooltip"
+												                        href="#" title="Twitter"></a>
+												</li>
+												<li class="item-151"><a class="fa fa-skype hasTooltip" href="#"
+												                        title="Skype"></a>
+												</li>
+												<li class="item-149"><a class="fa fa-google-plus hasTooltip"
+												                        href="#" title="Google+"></a>
+												</li>
+												<li class="item-152"><a class="fa fa-instagram hasTooltip"
+												                        href="#" title="Instagram"></a>
+												</li>
+												<li class="item-280"><a class="fa fa-vimeo-square hasTooltip"
+												                        href="#" title="Vimeo"></a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script type="text/javascript">
+					jQuery(function ($) {
+						$(document).ready(function () {
+							$("#email-button").mouseup(function () {
+								this.blur();
+								//Gather inputs from form
+								var name = document.getElementById("name-input").value;
+								name = name.trim();
+								
+								var email = document.getElementById("email-input").value;
+								email = email.trim();
+								
+								var message = document.getElementById("message-input").value;
+								message = message.trim();
+								//Check if inputs are valid
+								var valid = true;
+								if(name == "" || name == "Name:") {
+									document.getElementById("name-error").innerHTML = "Please enter a valid name";
+									valid = false;
+								} else {
+									document.getElementById("name-error").innerHTML = "";
+								}
+								var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i;
+								if(!regex.test(email) || email == "" || email == "Email:") {
+									document.getElementById("email-error").innerHTML = "Please enter a valid email";
+									valid = false;
+								} else {
+									document.getElementById("email-error").innerHTML = "";
+								}
+								if(message == "" || message == "Message:") {
+									document.getElementById("message-error").innerHTML = "Please enter a valid message";
+									valid = false;
+								} else {
+									document.getElementById("message-error").innerHTML = "";
+								}
+								if(!valid) {
+									return false;
+								}
+								//If valid, submit email
+								document.getElementById("return-message").innerHTML = "Sending message...";
+								var xmlhttp = new XMLHttpRequest();
+								xmlhttp.onreadystatechange = function () {
+									if (this.readyState == 4 && this.status == 200) {
+										if(this.responseText == "OK") {
+											document.getElementById("return-message").innerHTML = "Message sent!";
+										} else {
+											document.getElementById("return-message").innerHTML = "Uh oh! Something went wrong. Please try again later";
+										}
+									}
+								};
+								var url = "scripts/email-message.php?name="+name+"&email="+email+"&message="+message;
+								url = encodeURI(url);
+								xmlhttp.open("GET", url, true);
+								xmlhttp.send();
+							});
+						});
+					});
+				</script>
+				<style>
+					.error {
+						color: #ffffff;
+						font-weight: bold;
+						margin-left: 30px;
+					}
+					.message {
+						color: #ffffff;
+						font-weight: bold;
+						font-size: 22px;
+						padding-bottom: 10px !important;
+					}
+				</style>
+				<div class="moduletable contact-form  span6">
+					<div class="module_container">
+						<header><h3 class="moduleTitle "><span>Send us a message</span>
+						</h3></header>
+						<div id="contact">
+							<form class="mod_tm_ajax_contact_form" id="contact-form" novalidate>
+								<p class="message" id="return-message"></p>
+								<fieldset>
+									<div class="row-fluid">
+										<p class="error" id="name-error"></p>
+										<div class="control-group control-group-input span6">
+											<div class="controls"><input type="text" value="Name:"
+											                             onfocus="if(this.value == 'Name:') this.value = '';"
+											                             onblur="if(this.value=='') this.value='Name:';"
+											                             name="name" id="name-input"
+											                             required style="color:white" title="Name:"></div>
+										</div>
+										<p class="error" id="email-error"></p>
+										<div class="control-group control-group-input span6">
+											<div class="controls"><input type="text" value="Email:"
+											                             onfocus="if(this.value == 'Email:') this.value = '';"
+											                             onblur="if(this.value=='') this.value='Email:';"
+											                             name="email" id="email-input"
+											                             required style="color:white" title="Email:"></div>
+										</div>
+										<p class="error" id="message-error"></p>
+										<div class="control-group control-group-input span12">
+											<div class="controls"><textarea name="message"
+											                                onfocus="if(this.value == 'Message:') this.value = '';"
+											                                onblur="if(this.value=='') this.value='Message:';"
+											                                id="message-input"
+											                                required style="color:white"
+											                                title="Message:">Message:</textarea></div>
+										</div>                <!-- Submit Button -->
+										<div class="control-group control-group-button span12">
+											<div class="controls">
+												<button type="button"
+												        class="btn btn-primary" id="email-button">
+													Send
+												</button>
+											</div>
+										</div>
+									</div>
+								</fieldset>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Copyright -->
+<div id="copyright" role="contentinfo">
+	<div class="row-container">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				
+				<div class="copyright span12">
+					<span class="siteName">Sunshine Electronics Props</span>
+					<span class="copy">&copy;</span> <span class="year">2016</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

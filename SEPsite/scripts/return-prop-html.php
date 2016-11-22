@@ -35,9 +35,10 @@ if($category != "" || $working != 2) {
 }
 
 //Prepare statement
-$sql = "SELECT * FROM inventory".$sqlWhere." ORDER BY \"".$sortBy."\" ".$descAsc;
-ChromePhp::log($sql);
+$sql = /* @lang MySQL */ "SELECT * FROM inventory".$sqlWhere." ORDER BY ".$sortBy." ".$descAsc;
+$sqlNumRows = /* @lang MySQL */ "SELECT DISTINCT ".$sortBy." FROM inventory";
 $result = $conn->query($sql);
+$numRows = $conn->query($sqlNumRows)->num_rows;
 if($result->num_rows == 0) {
 	echo "<b>No results!</b>";
 	return;
@@ -45,14 +46,22 @@ if($result->num_rows == 0) {
 
 $html = "";
 $id = 0;
+$numItem = 0;
 $row = $result->fetch_assoc();
 $last = $row[$sortBy];
 $runLoop = true;
 while($runLoop) {
 	$id++;
-	$header = $headRow[$sortBy];
-	$html = $html.
-			"<div class=\"accordion\" id=\"accordion".$id."\">
+	$item = "";
+	if($id == 1) {
+		$item = $item." firstItem";
+	}
+	if($id == $numRows) {
+		$item = $item." lastItem";
+	}
+	$header = $row[$sortBy];
+	$html = /* @lang HTML */$html.
+			"<div class=\"accordion".$item."\" id=\"accordion".$id."\">
 				<div class=\"accordion-group\">
 					<!-- Item title -->
 					<div class=\"accordion-heading\">
@@ -62,7 +71,7 @@ while($runLoop) {
 					<div id=\"collapse_".$id."\" class=\"accordion-body collapse\">
 						<div class=\"accordion-inner\">";
 	while($row[$sortBy] == $last) {
-		ChromePhp::log($row[$sortBy]);
+		$numItem++;
 		$workBold = "";
 		$workText = "";
 		if($row["working"] == 0) {
@@ -79,19 +88,21 @@ while($runLoop) {
 		if($row["num_rented"] == 0) {
 			$rentedBold = " class=\"red\"";
 		}
-		$html = $html.
+		$origPath = "images/inventory/original/".substr($row["picture_path"], strlen("images/inventory/"));
+		$html = /* @lang HTML */$html.
 							"<div class=\"inventory\">
-								<img class=\"prop-img\" src=\"".$row["picture_path"]."\" alt=\"Item preview\"/>
+								<a class='prop-img' id='img".$numItem."' href='".$origPath."' target='_blank'><img class=\"prop-img\" src=\"".$row["picture_path"]."\" alt=\"Item preview\"/></a>
 								<p class=\"prop-text\" id=\"clamp\"><b>".$row["title"]."</b><br>".$row["description"]."</p>
 								<p class=\"prop-id\"><b>Category: </b>".$row["category"].",<b".$workBold."> Working: </b>".$workText.",<b> ID: </b>".$row["id"]."</p>
 								<p class=\"prop-cat\"><b>Time Period: </b>".$row["time_period"].",<b".$availBold."> Available: </b>".$row["num_available"].",<b".$rentedBold."> Rented: </b>".$row["num_rented"]."</p>
-							</div>";
+							</div>
+							";
 		if(!($row = $result->fetch_assoc())) {
 			$runLoop = false;
 			break;
 		}
 	}
-	$html = $html.
+	$html = /* @lang HTML */$html.
 						"</div>
 					</div>
 				</div>

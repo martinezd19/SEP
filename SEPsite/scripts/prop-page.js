@@ -23,9 +23,16 @@ function displayProps() {
             temp.disabled = false;
             temp = document.getElementById("categorySelect");
             temp.disabled = false;
+            jQuery(function ($) {
+                $('.accordion-body.collapse').on('shown', function (event) {
+                    $(this).parent('.accordion-group').find('.accordion-toggle').addClass('selected')
+                });
+                $('.accordion-body.collapse').on('hidden', function (event) {
+                    $(this).parent('.accordion-group').find('.accordion-toggle').removeClass('selected')
+                });
+            });
         }
     };
-    console.log("scripts/return-prop-html.php?sort="+sortBy+"&working="+working+"&asc="+descAsc+"&category="+category);
     xmlhttp.open("GET", "scripts/return-prop-html.php?sort="+sortBy+"&working="+working+"&asc="+descAsc+"&category="+category, true);
     xmlhttp.send();
 }
