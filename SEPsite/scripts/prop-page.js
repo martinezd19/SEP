@@ -13,7 +13,7 @@ function displayProps() {
     var category = temp.options[temp.selectedIndex].value;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
-        if(this.readyState == 4 && this.status == 200) {
+        if (this.readyState == 4 && this.status == 200) {
             document.getElementById("prop-accordion").innerHTML = this.responseText;
             var temp = document.getElementById("sortBySelect");
             temp.disabled = false;
@@ -33,6 +33,6 @@ function displayProps() {
             });
         }
     };
-    xmlhttp.open("GET", "scripts/return-prop-html.php?sort="+sortBy+"&working="+working+"&asc="+descAsc+"&category="+category, true);
+    xmlhttp.open("GET", "scripts/return-prop-html.php?sort=" + sortBy + "&working=" + working + "&asc=" + descAsc + "&category=" + category, true);
     xmlhttp.send();
 }

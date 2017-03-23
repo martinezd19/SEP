@@ -274,7 +274,7 @@
             o = s.css("position");
             u = s.css("position");
             a = s.css("top");
-            if (w())r.$el.after(p);
+            if (w()) r.$el.after(p);
             e(window).bind("resize.ScrollToFixed", A);
             e(window).bind("scroll.ScrollToFixed", O);
             if (r.options.preFixed) {

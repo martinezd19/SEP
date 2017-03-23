@@ -97,7 +97,7 @@ jQuery.extend(jQuery.easing, {
         var u = r;
         if (t == 0)return n;
         if ((t /= i) == 1)return n + r;
-        if (!o)o = i * .3;
+        if (!o) o = i * .3;
         if (u < Math.abs(r)) {
             u = r;
             var s = o / 4
@@ -109,7 +109,7 @@ jQuery.extend(jQuery.easing, {
         var u = r;
         if (t == 0)return n;
         if ((t /= i) == 1)return n + r;
-        if (!o)o = i * .3;
+        if (!o) o = i * .3;
         if (u < Math.abs(r)) {
             u = r;
             var s = o / 4
@@ -121,7 +121,7 @@ jQuery.extend(jQuery.easing, {
         var u = r;
         if (t == 0)return n;
         if ((t /= i / 2) == 2)return n + r;
-        if (!o)o = i * .3 * 1.5;
+        if (!o) o = i * .3 * 1.5;
         if (u < Math.abs(r)) {
             u = r;
             var s = o / 4
@@ -129,13 +129,13 @@ jQuery.extend(jQuery.easing, {
         if (t < 1)return -.5 * u * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * i - s) * 2 * Math.PI / o) + n;
         return u * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * i - s) * 2 * Math.PI / o) * .5 + r + n
     }, easeInBack: function (e, t, n, r, i, s) {
-        if (s == undefined)s = 1.70158;
+        if (s == undefined) s = 1.70158;
         return r * (t /= i) * t * ((s + 1) * t - s) + n
     }, easeOutBack: function (e, t, n, r, i, s) {
-        if (s == undefined)s = 1.70158;
+        if (s == undefined) s = 1.70158;
         return r * ((t = t / i - 1) * t * ((s + 1) * t + s) + 1) + n
     }, easeInOutBack: function (e, t, n, r, i, s) {
-        if (s == undefined)s = 1.70158;
+        if (s == undefined) s = 1.70158;
         if ((t /= i / 2) < 1)return r / 2 * t * t * (((s *= 1.525) + 1) * t - s) + n;
         return r / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + n
     }, easeInBounce: function (e, t, n, r, i) {
@@ -383,7 +383,7 @@ jQuery.extend(jQuery.easing, {
                 throw new TypeError(fun + " is not a function")
             }
             for (var i = 0; i < length; i++) {
-                if (i in self)result[i] = fun.call(thisp, self[i], i, object)
+                if (i in self) result[i] = fun.call(thisp, self[i], i, object)
             }
             return result
         }
@@ -969,15 +969,15 @@ jQuery.extend(jQuery.easing, {
                 d = d.charAt(0).toUpperCase() + d.slice(1), t["init" + d].call(t)
             }
             T("BeforeOpen"), t.st.showCloseBtn && (t.st.closeBtnInside ? (x(p, function (e, t, n, i) {
-                n.close_replaceWith = E(i.type)
-            }), a += " mfp-close-btn-in") : t.wrap.append(E())), t.st.alignTop && (a += " mfp-align-top"), t.fixedContentPos ? t.wrap.css({
-                overflow: t.st.overflowY,
-                overflowX: "hidden",
-                overflowY: t.st.overflowY
-            }) : t.wrap.css({
-                top: I.scrollTop(),
-                position: "absolute"
-            }), (t.st.fixedBgPos === !1 || "auto" === t.st.fixedBgPos && !t.fixedContentPos) && t.bgOverlay.css({
+                    n.close_replaceWith = E(i.type)
+                }), a += " mfp-close-btn-in") : t.wrap.append(E())), t.st.alignTop && (a += " mfp-align-top"), t.fixedContentPos ? t.wrap.css({
+                    overflow: t.st.overflowY,
+                    overflowX: "hidden",
+                    overflowY: t.st.overflowY
+                }) : t.wrap.css({
+                    top: I.scrollTop(),
+                    position: "absolute"
+                }), (t.st.fixedBgPos === !1 || "auto" === t.st.fixedBgPos && !t.fixedContentPos) && t.bgOverlay.css({
                 height: o.height(),
                 position: "absolute"
             }), t.st.enableEscapeKey && o.on("keyup" + h, function (e) {
@@ -997,8 +997,8 @@ jQuery.extend(jQuery.easing, {
             }, 16), t.isOpen = !0, t.updateSize(u), T(f), n
         }, close: function () {
             t.isOpen && (T(c), t.isOpen = !1, t.st.removalDelay && !t.isLowIE && t.supportsTransition ? (t._addClassToMFP(C), setTimeout(function () {
-                t._close()
-            }, t.st.removalDelay)) : t._close())
+                    t._close()
+                }, t.st.removalDelay)) : t._close())
         }, _close: function () {
             T(l);
             var n = C + " " + v + " ";
@@ -1370,32 +1370,32 @@ jQuery.extend(jQuery.easing, {
             initGallery: function () {
                 var n = t.st.gallery, i = ".mfp-gallery", r = Boolean(e.fn.mfpFastClick);
                 return t.direction = !0, n && n.enabled ? (a += " mfp-gallery", x(f + i, function () {
-                    n.navigateByImgClick && t.wrap.on("click" + i, ".mfp-img", function () {
-                        return t.items.length > 1 ? (t.next(), !1) : void 0
-                    }), o.on("keydown" + i, function (e) {
-                        37 === e.keyCode ? t.prev() : 39 === e.keyCode && t.next()
-                    })
-                }), x("UpdateStatus" + i, function (e, n) {
-                    n.text && (n.text = Y(n.text, t.currItem.index, t.items.length))
-                }), x(p + i, function (e, i, o, r) {
-                    var a = t.items.length;
-                    o.counter = a > 1 ? Y(n.tCounter, r.index, a) : ""
-                }), x("BuildControls" + i, function () {
-                    if (t.items.length > 1 && n.arrows && !t.arrowLeft) {
-                        var i = n.arrowMarkup, o = t.arrowLeft = e(i.replace(/%title%/gi, n.tPrev).replace(/%dir%/gi, "left")).addClass(y), a = t.arrowRight = e(i.replace(/%title%/gi, n.tNext).replace(/%dir%/gi, "right")).addClass(y), s = r ? "mfpFastClick" : "click";
-                        o[s](function () {
-                            t.prev()
-                        }), a[s](function () {
-                            t.next()
-                        }), t.isIE7 && (k("b", o[0], !1, !0), k("a", o[0], !1, !0), k("b", a[0], !1, !0), k("a", a[0], !1, !0)), t.container.append(o.add(a))
-                    }
-                }), x(m + i, function () {
-                    t._preloadTimeout && clearTimeout(t._preloadTimeout), t._preloadTimeout = setTimeout(function () {
-                        t.preloadNearbyImages(), t._preloadTimeout = null
-                    }, 16)
-                }), x(l + i, function () {
-                    o.off(i), t.wrap.off("click" + i), t.arrowLeft && r && t.arrowLeft.add(t.arrowRight).destroyMfpFastClick(), t.arrowRight = t.arrowLeft = null
-                }), void 0) : !1
+                        n.navigateByImgClick && t.wrap.on("click" + i, ".mfp-img", function () {
+                            return t.items.length > 1 ? (t.next(), !1) : void 0
+                        }), o.on("keydown" + i, function (e) {
+                            37 === e.keyCode ? t.prev() : 39 === e.keyCode && t.next()
+                        })
+                    }), x("UpdateStatus" + i, function (e, n) {
+                        n.text && (n.text = Y(n.text, t.currItem.index, t.items.length))
+                    }), x(p + i, function (e, i, o, r) {
+                        var a = t.items.length;
+                        o.counter = a > 1 ? Y(n.tCounter, r.index, a) : ""
+                    }), x("BuildControls" + i, function () {
+                        if (t.items.length > 1 && n.arrows && !t.arrowLeft) {
+                            var i = n.arrowMarkup, o = t.arrowLeft = e(i.replace(/%title%/gi, n.tPrev).replace(/%dir%/gi, "left")).addClass(y), a = t.arrowRight = e(i.replace(/%title%/gi, n.tNext).replace(/%dir%/gi, "right")).addClass(y), s = r ? "mfpFastClick" : "click";
+                            o[s](function () {
+                                t.prev()
+                            }), a[s](function () {
+                                t.next()
+                            }), t.isIE7 && (k("b", o[0], !1, !0), k("a", o[0], !1, !0), k("b", a[0], !1, !0), k("a", a[0], !1, !0)), t.container.append(o.add(a))
+                        }
+                    }), x(m + i, function () {
+                        t._preloadTimeout && clearTimeout(t._preloadTimeout), t._preloadTimeout = setTimeout(function () {
+                            t.preloadNearbyImages(), t._preloadTimeout = null
+                        }, 16)
+                    }), x(l + i, function () {
+                        o.off(i), t.wrap.off("click" + i), t.arrowLeft && r && t.arrowLeft.add(t.arrowRight).destroyMfpFastClick(), t.arrowRight = t.arrowLeft = null
+                    }), void 0) : !1
             }, next: function () {
                 t.direction = !0, t.index = K(t.index + 1), t.updateItemHTML()
             }, prev: function () {
@@ -2478,7 +2478,7 @@ jQuery(function ($) {
         $(this).find('> .accordion-group:first-child').addClass('firstItem')
     });
 
-     setInterval(function () {
+    setInterval(function () {
         $('.top-img .layer-1').addClass('visible');
     }, 1000);
     setInterval(function () {

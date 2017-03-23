@@ -5,7 +5,7 @@ RewriteCond %{HTTP_HOST} ^sunshineeprops.com[nc]
 RewriteRule ^(.*)$ http://www.sunshineeprops.com/$1 [r=301,nc]
 
 #Change default directory page
-DirectoryIndex index.php
+DirectoryIndex home.php
 
 #Prevent viewing of .htaccess file
 <Files .htaccess>
@@ -18,3 +18,16 @@ Options All -Indexes
 
 #Include PHP logger
 php_value include_path "/config/chromephp.php"
+
+#Rewrite URI
+RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
+RewriteRule ^ /%1 [NC,L,R]
+
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^ %{REQUEST_URI}.html [NC,L]
+
+RewriteCond %{THE_REQUEST} /([^.]+)\.php [NC]
+RewriteRule ^ /%1 [NC,L,R]
+
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^ %{REQUEST_URI}.php [NC,L]

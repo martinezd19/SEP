@@ -830,8 +830,8 @@
             }
 
             // is our object trying to move outside lower X & Y limits?
-            if (this.pos.x + dx < lowerXLimit)     hash.x = lowerXLimit;
-            if (this.pos.y + dy < lowerYLimit)     hash.y = lowerYLimit;
+            if (this.pos.x + dx < lowerXLimit) hash.x = lowerXLimit;
+            if (this.pos.y + dy < lowerYLimit) hash.y = lowerYLimit;
 
         } else if (typeof this.options.constrainTo === 'string') {
             lowerXLimit = 0;
@@ -840,13 +840,13 @@
             upperYLimit = this.$container.height() - this.$el.outerHeight();
 
             // is our object trying to move outside lower X & Y limits?
-            if (this.pos.x + dx < 0)              hash.x = 0;
-            if (this.pos.y + dy < 0)              hash.y = 0;
+            if (this.pos.x + dx < 0) hash.x = 0;
+            if (this.pos.y + dy < 0) hash.y = 0;
         }
 
         // is our object trying to move outside upper X & Y limits?
-        if (this.pos.x + dx > upperXLimit)    hash.x = upperXLimit;
-        if (this.pos.y + dy > upperYLimit)    hash.y = upperYLimit;
+        if (this.pos.x + dx > upperXLimit) hash.x = upperXLimit;
+        if (this.pos.y + dy > upperYLimit) hash.y = upperYLimit;
 
         // Account for translation, which makes movement a little tricky.
         if (this.shouldUseCSSTranslation() && accountForTranslation) {

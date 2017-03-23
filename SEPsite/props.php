@@ -2,46 +2,44 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html" xml:lang="en-gb" lang="en-gb">
 <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 <head>
-	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,400italic,500,700,900' rel='stylesheet'
-	      type='text/css'>
-	<base/>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<meta name="generator" content="Joomla! - Open Source Content Management"/>
-	<title>Props</title>
-	<link href="templates/theme3079/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
-	<link rel="stylesheet" href="templates/theme3079/css/layout.css" type="text/css"/>
-	<link rel="stylesheet" href="templates/theme3079/css/jquery.fancybox.css" type="text/css"/>
-	<link rel="stylesheet" href="templates/theme3079/css/jquery.fancybox-buttons.css" type="text/css"/>
-	<link rel="stylesheet" href="templates/theme3079/css/jquery.fancybox-thumbs.css" type="text/css"/>
-	<link rel="stylesheet" href="templates/theme3079/css/template.css" type="text/css"/>
-	<link rel="stylesheet" href="templates/theme3079/color_schemes/css/color_scheme_1.css" type="text/css"
-	      id="color_scheme"/>
-	<link rel="stylesheet" href="modules/mod_tm_ajax_contact_form/css/style.css" type="text/css"/>
-	<link rel="stylesheet" href="modules/mod_bootstrap_collapse/css/style.css" type="text/css"/>
-	<link rel="stylesheet" href="templates/theme3079/html/mod_icemegamenu/css/default_icemegamenu.css"
-	      type="text/css"/>
-	<link rel="stylesheet" href="templates/theme3079/html/mod_icemegamenu/css/default_icemegamenu-reponsive.css"
-	      type="text/css"/>
-	<link rel="stylesheet" href="modules/mod_socialloginandsocialshare/lrstyle.css" type="text/css"/>
-	<script src="media/jui/js/jquery.min.js" type="text/javascript"></script>
-	<script src="media/jui/js/jquery-noconflict.js" type="text/javascript"></script>
-	<script src="media/jui/js/jquery-migrate.min.js" type="text/javascript"></script>
-	<script src="media/system/js/caption.js" type="text/javascript"></script>
-	<script src="media/jui/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="modules/mod_tm_ajax_contact_form/js/jquery.validate.min.js" type="text/javascript"></script>
-	<script src="modules/mod_tm_ajax_contact_form/js/additional-methods.min.js" type="text/javascript"></script>
-	<script src="modules/mod_tm_ajax_contact_form/js/autosize.min.js" type="text/javascript"></script>
-	<script src="modules/mod_tm_ajax_contact_form/js/ajaxsendmail.js" type="text/javascript"></script>
-	<script src="templates/theme3079/html/mod_icemegamenu/js/menu.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="css/prop-page.css" type="text/css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,400italic,500,700,900' rel='stylesheet'
+          type='text/css'>
+    <base/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="generator" content="Joomla! - Open Source Content Management"/>
+    <title>Props</title>
+    <link href="templates/theme3079/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
+    <link rel="stylesheet" href="templates/theme3079/css/layout.min.css" type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/css/jquery-fancybox.min.css" type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/css/jquery-fancybox-buttons.min.css" type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/css/jquery-fancybox-thumbs.min.css" type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/css/template.min.css" type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/color_schemes/css/color_scheme_1.min.css" type="text/css"
+          id="color_scheme"/>
+    <link rel="stylesheet" href="modules/mod_tm_ajax_contact_form/css/style.min.css" type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/css/caroufredsel.min.css" type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/html/mod_icemegamenu/css/default_icemegamenu.min.css"
+          type="text/css"/>
+    <link rel="stylesheet" href="templates/theme3079/html/mod_icemegamenu/css/default_icemegamenu-reponsive.min.css"
+          type="text/css"/>
+    <script src="media/jui/js/jquery.min.js" type="text/javascript"></script>
+    <script src="media/jui/js/jquery-noconflict.min.js" type="text/javascript"></script>
+    <script src="media/jui/js/jquery-migrate.min.js" type="text/javascript"></script>
+    <script src="media/system/js/caption.min.js" type="text/javascript"></script>
+    <script src="media/jui/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="media/system/js/mootools-core.min.js" type="text/javascript"></script>
+    <script src="media/system/js/core.min.js" type="text/javascript"></script>
+    <script src="modules/mod_caroufredsel/js/jquery.caroufredsel.js" type="text/javascript"></script>
+    <script src="templates/theme3079/html/mod_icemegamenu/js/menu.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="css/prop-page.css" type="text/css"/>
 
-	<script type="text/javascript" src="scripts/prop-page.js"></script>
-	<script type="text/javascript">
-		jQuery(window).on('load', function () {
-			displayProps();
-		});
-	</script>
+    <script type="text/javascript" src="scripts/prop-page.js"></script>
+    <script type="text/javascript">
+        jQuery(window).on('load', function () {
+            displayProps();
+        });
+    </script>
 
 </head>
 <body id="body">
@@ -54,608 +52,151 @@ $conn = new mysqli($login['host'], $login['username'], $login['password'], $logi
 
 //Check if connection is valid
 if ($conn->connect_errno) {
-	echo "dead";
+  echo "dead";
 }
 ?>
 <div id="wrapper">
-	<div class="wrapper-inner">
+    <div class="wrapper-inner">
 
-		<div class="bg_top">
-			<!-- Top -->
-			<div id="top">
-				<div class="row-container">
-					<div class="container-fluid">
-						<div class="row-fluid">
-							<!-- Logo -->
-							<div id="logo" class="span3">
-								<a href="index.php">
-									<img src="images/logo.png" alt="AIO Inspections">
-									<h1>AIO Inspections</h1>
-								</a>
-							</div>
-							<nav class="moduletable home_menu  span9">
-								<div class="module_container">
-									<div class="icemegamenu">
-										<div class="ice-megamenu-toggle"><a data-toggle="collapse"
-										                                    data-target=".nav-collapse">Menu</a></div>
-										<div class="nav-collapse icemegamenu collapse left ">
-											<ul id="icemegamenu" class="meganizr mzr-slide mzr-responsive">
-												<li id="iceMenu_101" class="iceMenuLiLevel_1 mzr-drop parent fullwidth">
-													<a href="index.php" class=" iceMenuTitle "><span
-																class="icemega_title icemega_nosubtitle">Home</span></a>
-													<ul class="icesubMenu icemodules sub_level_1" style="width:100%">
-														<li>
-															<div style="float:left;width:33%" class="iceCols">
-																<ul>
-																	<li id="iceMenu_347" class="iceMenuLiLevel_2 ">
-																		<div class="icemega_cover_module"
-																		     style="width:220px">
-																			<div class="icemega_modulewrap  no_padding"
-																			     style="width:auto; "><span
-																						class="iceModuleTile">Categories</span>
-																				<ul class="categories-module no_padding">
-																					<li>
-																						<a href="pages/blog/12-lorem-ipsum-dolor-sit-amet.html">Lorem
-																						                                                        ipsum
-																						                                                        dolor
-																						                                                        sit
-																						                                                        amet </a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/13-conse-ctetur-adipisicing.html">Conse
-																						                                                      ctetur
-																						                                                      adipisicing</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/14-elit-sed-do-eiusmod-tempor.html">Elit
-																						                                                        sed
-																						                                                        do
-																						                                                        eiusmod
-																						                                                        tempor</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/15-incididunt-ut-labore.html">Incididunt
-																						                                                  ut
-																						                                                  labore</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/48-et-dolore-magna-aliqua.html">Et
-																						                                                    dolore
-																						                                                    magna
-																						                                                    aliqua</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/49-lorem-ipsum-dolor-sit-amet-2.html">Lorem
-																						                                                          ipsum
-																						                                                          dolor
-																						                                                          sit
-																						                                                          amet</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/50-conse-ctetur-adipisicing-2.html">Conse
-																						                                                        ctetur
-																						                                                        adipisicing</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/51-elit-sed-do-eiusmod-tempor-2.html">Elit
-																						                                                          sed
-																						                                                          do
-																						                                                          eiusmod
-																						                                                          tempor</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/52-incididunt-ut-labore-2.html">Incididunt
-																						                                                    ut
-																						                                                    labore</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/53-et-dolore-magna-aliqua-2.html">Et
-																						                                                      dolore
-																						                                                      magna
-																						                                                      aliqua</a>
-																					</li>
-																					<li>
-																						<a href="pages/blog/54-conse-ctetur-adipisicing-3.html">Conse
-																						                                                        ctetur
-																						                                                        adipisicing</a>
-																					</li>
-																				</ul>
-																			</div>
-																		</div>
-																	</li>
-																</ul>
-															</div>
-															<div style="float:left;width: 33%" class="iceCols">
-																<ul>
-																	<li id="iceMenu_349" class="iceMenuLiLevel_2 ">
-																		<div class="icemega_cover_module"
-																		     style="width:220px">
-																			<div class="icemega_modulewrap list1"
-																			     style="width:auto; "><span
-																						class="iceModuleTile">What we offer</span>
-																				<div class="mod-menu">
-																					<ul class="nav menu ">
-																						<li class="item-309"><a
-																									href="#">Lorem ipsum
-																						               dolor sit
-																						               amet</a>
-																						</li>
-																						<li class="item-310"><a
-																									href="#">Conse ctetur
-																						               adipisicing</a>
-																						</li>
-																						<li class="item-311"><a
-																									href="#">Elit sed do
-																						               eiusmod
-																						               tempor</a>
-																						</li>
-																						<li class="item-312"><a
-																									href="#">Incididunt ut
-																						               labore</a>
-																						</li>
-																					</ul>
-																				</div>
-																			</div>
-																		</div>
-																	</li>
-																	<li id="iceMenu_423" class="iceMenuLiLevel_2 ">
-																		<div class="icemega_cover_module"
-																		     style="width:100%">
-																			<div class="icemega_modulewrap list1"
-																			     style="width:auto; "><span
-																						class="iceModuleTile">What we do</span>
-																				<div class="mod-menu">
-																					<ul class="nav menu ">
-																						<li class="item-416"><a
-																									href="#">Conse ctetur
-																						               adipisicing</a>
-																						</li>
-																						<li class="item-417"><a
-																									href="#">Elit sed do
-																						               eiusmod
-																						               tempor</a>
-																						</li>
-																						<li class="item-418"><a
-																									href="#">Incididunt ut
-																						               labore</a>
-																						</li>
-																						<li class="item-419"><a
-																									href="#">Lorem ipsum
-																						               dolor sit
-																						               amet</a>
-																						</li>
-																					</ul>
-																				</div>
-																			</div>
-																		</div>
-																	</li>
-																</ul>
-															</div>
-															<div style="float:left;width: 33%" class="iceCols">
-																<ul>
-																	<li id="iceMenu_424" class="iceMenuLiLevel_2 ">
-																		<div class="icemega_cover_module"
-																		     style="width:100%">
-																			<div class="icemega_modulewrap menu_about"
-																			     style="width:auto; "><span
-																						class="iceModuleTile">About</span>
-																				<div
-																						class="mod-article-single mod-article-single__menu_about"
-																						id="module_177">
-																					<div class="item__module"
-																					     id="item_117">
+        <div class="bg_top">
+            <!-- Top -->
+          <?php
+          include "header.html";
+          ?>
+            <!-- Header -->
 
-																						<!-- Intro Text -->
-																						<div class="item_introtext">
-																							<p>Lorem ipsum dolor sit
-																							   amet conse ctetur
-																							   adipisicing elit, sed do
-																							   eiusmod tempor
-																							   incididunt ut labore et
-																							   dolore magna aliqua. Ut
-																							   enim ad minim. ex ea
-																							   commodo consequat. Duis
-																							   aute irure dolor in
-																							   reprehenderit in
-																							   voluptate velit esse
-																							   cillum dolore eu fugiat
-																							   nulla pariatur.
-																							   Excepteur sint occaecat
-																							   cupidatat non proident,
-																							   sunt in culpa qui
-																							   offici. Lorem ipsum
-																							   dolor sit amet conse
-																							   ctetur adipisicing
-																							   elit,</p>
-																						</div>
-																						<a class="btn btn-info readmore"
-																						   href="pages/about-3.html"><span>Read more</span></a>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																	</li>
-																</ul>
-															</div>
-														</li>
-													</ul>
-												</li>
-												<li id="iceMenu_134" class="iceMenuLiLevel_1 "><a href="about.php"
-												                                                  class=" iceMenuTitle "><span
-																class="icemega_title icemega_nosubtitle">About</span></a>
-												</li>
-												<li id="iceMenu_335" class="iceMenuLiLevel_1 mzr-drop parent active "><a
-															class="icemega_active iceMenuTitle "><span
-																class="icemega_title icemega_nosubtitle">Pages</span></a>
-													<ul class="icesubMenu icemodules sub_level_1" style="width:200px">
-														<li>
-															<div style="float:left;width:200px" class="iceCols">
-																<ul>
-																	<li id="iceMenu_336" class="iceMenuLiLevel_2 "><a
-																				href="pricing.html"
-																				class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Pricing</span></a>
-																	</li>
-																	<li id="iceMenu_138"
-																	    class="iceMenuLiLevel_2 active "><a
-																				href="faqs.html"
-																				class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">FAQs</span></a>
-																	</li>
-																	<li id="iceMenu_136" class="iceMenuLiLevel_2 "><a
-																				href="our-team.html" class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Our team</span></a>
-																	</li>
-																	<li id="iceMenu_135" class="iceMenuLiLevel_2 "><a
-																				href="history.html"
-																				class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">History</span></a>
-																	</li>
-																	<li id="iceMenu_137" class="iceMenuLiLevel_2 "><a
-																				href="testimonials.html"
-																				class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Testimonials</span></a>
-																	</li>
-																	<li id="iceMenu_305" class="iceMenuLiLevel_2 "><a
-																				href="site-map.html" class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Site map</span></a>
-																	</li>
-																	<li id="iceMenu_342" class="iceMenuLiLevel_2 "><a
-																				href="../forum.html" class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Forum</span></a>
-																	</li>
-																	<li id="iceMenu_343" class="iceMenuLiLevel_2 "><a
-																				href="careers.html"
-																				class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Careers</span></a>
-																	</li>
-																	<li id="iceMenu_283" class="iceMenuLiLevel_2 "><a
-																				href="portfolio.html"
-																				class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Portfolio</span></a>
-																	</li>
-																	<li id="iceMenu_426" class="iceMenuLiLevel_2 "><a
-																				href="elements.html" class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Elements</span></a>
-																	</li>
-																	<li id="iceMenu_171" class="iceMenuLiLevel_2 "><a
-																				href="../template-settings.html"
-																				class=" iceMenuTitle "><span
-																					class="icemega_title icemega_nosubtitle">Template settings</span></a>
-																	</li>
-																</ul>
-															</div>
-														</li>
-													</ul>
-												</li>
-												<li id="iceMenu_285" class="iceMenuLiLevel_1 "><a href="../blog.html"
-												                                                  class=" iceMenuTitle "><span
-																class="icemega_title icemega_nosubtitle">Blog</span></a>
-												</li>
-												<li id="iceMenu_203" class="iceMenuLiLevel_1 gallery"><a
-															href="../gallery.html" class=" iceMenuTitle "><span
-																class="icemega_title icemega_nosubtitle">Gallery</span></a>
-												</li>
-												<li id="iceMenu_142" class="iceMenuLiLevel_1 "><a
-															href="../faq.html" class=" iceMenuTitle "><span
-																class="icemega_title icemega_nosubtitle">FAQ</span></a>
-												</li>
-											</ul>
-										</div>
-									</div>
+        </div>
+        <div class="bg_cont">
 
+            <!-- breadcrumbs row -->
+            <div class="row-container">
+                <div class="container-fluid">
+                    <!-- Breadcrumbs -->
+                    <div id="breadcrumbs" class="row-fluid">
+                        <div class="moduletable   span12">
+                            <div class="module_container">
+                                <ul class="breadcrumb">
+                                    <li><a href="home.php" class="pathway">Home</a><span
+                                                class="divider">&nbsp;|&nbsp;</span>
+                                    </li>
+                                    <li class="active"><span>Props</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Content row -->
+            <div id="content">
+                <div class="row-container">
+                    <div class="container-fluid">
+                        <div class="content-inner row-fluid">
 
-									<script type="text/javascript">
-										jQuery(document).ready(function () {
-											var browser_width1 = jQuery(window).width();
-											jQuery("#icemegamenu").find(".icesubMenu").each(function (index) {
-												var offset1 = jQuery(this).offset();
-												var xwidth1 = offset1.left + jQuery(this).width();
-												if (xwidth1 >= browser_width1) {
-													jQuery(this).addClass("ice_righttoleft");
-												}
-											});
+                            <div id="component" class="span12">
+                                <main role="main">
 
-										});
-										jQuery(window).resize(function () {
-											var browser_width = jQuery(window).width();
-											jQuery("#icemegamenu").find(".icesubMenu").removeClass("ice_righttoleft");
-											jQuery("#icemegamenu").find(".icesubMenu").each(function (index) {
-												var offset = jQuery(this).offset();
-												var xwidth = offset.left + jQuery(this).width();
+                                    <!-- Content-bottom -->
+                                    <div id="content-bottom" class="row-fluid">
+                                        <div class="moduletable accordion accordion_style1  span12">
+                                            <div class="module_container" id="prop-module">
+                                                <div class="prop-container" id="prop-container">
+                                                    <div class="prop-select">
+                                                        <select id="sortBySelect" onchange="displayProps()">
+                                                            <option disabled selected value="title_first_letter">Sort
+                                                                by
+                                                            </option>
+                                                            <option value="title_first_letter">Title</option>
+                                                            <option value="time_period">Time period</option>
+                                                            <option value="category">Category</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="prop-select" onchange="displayProps()">
+                                                        <select id="workingSelect">
+                                                            <option disabled selected value="2">Select
+                                                                working/non-working
+                                                            </option>
+                                                            <option value="2">Either</option>
+                                                            <option value="1">Working</option>
+                                                            <option value="0">Non-working</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="prop-select" onchange="displayProps()">
+                                                        <select id="descAscSelect">
+                                                            <option disabled selected value="ASC">Select
+                                                                descending/ascending
+                                                            </option>
+                                                            <option value="ASC">Ascending</option>
+                                                            <option value="DESC">Descending</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="prop-select" onchange="displayProps()">
+                                                        <select id="categorySelect">
+                                                            <option disabled selected value="">Select category</option>
+                                                            <option value="">Any category</option>
+                                                          <?php
+                                                          $sql = "SELECT DISTINCT category FROM inventory ORDER BY category ASC";
+                                                          $result = $conn->query($sql);
+                                                          while ($row = $result->fetch_assoc()) {
+                                                            $category = $row["category"];
+                                                            echo "<option value=\"$category\">$category</option>";
+                                                          }
+                                                          ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="mod-bootstrap-collapse mod-bootstrap-collapse__accordion accordion_style1"
+                                                     id="prop-accordion">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-												if (xwidth >= browser_width) {
-													jQuery(this).addClass("ice_righttoleft");
-												}
-											});
-										});
-									</script>
-								</div>
-							</nav>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Header -->
+        </div>
 
-		</div>
-		<div class="bg_cont">
-
-			<!-- breadcrumbs row -->
-			<div class="row-container">
-				<div class="container-fluid">
-					<!-- Breadcrumbs -->
-					<div id="breadcrumbs" class="row-fluid">
-						<div class="moduletable   span12">
-							<div class="module_container">
-								<ul class="breadcrumb">
-									<li><a href="index.php" class="pathway">Home</a><span
-												class="divider">&nbsp;|&nbsp;</span>
-									</li>
-									<li class="active"><span>FAQs</span></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Main Content row -->
-			<div id="content">
-				<div class="row-container">
-					<div class="container-fluid">
-						<div class="content-inner row-fluid">
-
-							<div id="component" class="span12">
-								<main role="main">
-
-									<!-- Content-bottom -->
-									<div id="content-bottom" class="row-fluid">
-										<div class="moduletable accordion accordion_style1  span12">
-											<div class="module_container" id="prop-module">
-												<div class="prop-container" id="prop-container">
-													<div class="prop-select">
-														<select id="sortBySelect" onchange="displayProps()">
-															<option disabled selected value="title_first_letter">Sort by</option>
-															<option value="title_first_letter">Title</option>
-															<option value="time_period">Time period</option>
-															<option value="category">Category</option>
-														</select>
-													</div>
-													<div class="prop-select" onchange="displayProps()">
-														<select id="workingSelect">
-															<option disabled selected value="2">Select working/non-working
-															</option>
-															<option value="2">Either</option>
-															<option value="1">Working</option>
-															<option value="0">Non-working</option>
-														</select>
-													</div>
-													<div class="prop-select" onchange="displayProps()">
-														<select id="descAscSelect">
-															<option disabled selected value="ASC">Select descending/ascending
-															</option>
-															<option value="ASC">Ascending</option>
-															<option value="DESC">Descending</option>
-														</select>
-													</div>
-													<div class="prop-select" onchange="displayProps()">
-														<select id="categorySelect">
-															<option disabled selected value="">Select category</option>
-															<option value="">Any category</option>
-															<?php
-															$sql = "SELECT DISTINCT category FROM inventory ORDER BY category ASC";
-															$result = $conn->query($sql);
-															while ($row = $result->fetch_assoc()) {
-																$category = $row["category"];
-																echo "<option value=\"$category\">$category</option>";
-															}
-															?>
-														</select>
-													</div>
-												</div>
-												<div class="mod-bootstrap-collapse mod-bootstrap-collapse__accordion accordion_style1" id="prop-accordion">
-												</div>
-											</div>
-										</div>
-									</div>
-								</main>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
-
-	</div>
+    </div>
 </div>
 <div id="footer-wrapper">
-	<div class="footer-wrapper-inner">
-		<!-- Footer -->
-		<div id="footer">
-			<div class="row-container">
-				<div class="container-fluid">
-					<div class="row-fluid">
-						<div class="moduletable FAQ  span6">
-							<div class="module_container">
-								<header><h3 class="moduleTitle "><span
-												class="item_title_part0 item_title_part_odd item_title_part_first_half item_title_part_first">Contact</span>
-										<span class="item_title_part1 item_title_part_even item_title_part_second_half">info</span>
-									</h3></header>
-								<div class="mod-article-single mod-article-single__FAQ" id="module_191">
-									<div class="item__module" id="item_130">
-
-										<!-- Intro Text -->
-										<div class="item_introtext">
-											<p>Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod
-											   tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-											   veniam. Dolor sit amet conse ctetur adipisicing elit, sed do eiusmod
-											   tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-											   veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-											<ul class="FAQ">
-												<li class="address">1234 Johnson Road, City, State</li>
-												<li class="phone">000-000-0000</li>
-												<li class="mail"><a href="http://www.dr3am.org/" target="_blank">dr3am.org</a>
-												</li>
-											</ul>
-											<p>
-											<div class="moduletablesocial span12">
-
-												<div class="mod-menu mod-menu__social">
-													<ul class="nav menu ">
-														<li class="item-148"><a class="fa fa-facebook hasTooltip"
-														                        href="#" title="Facebook"></a>
-														</li>
-														<li class="item-150"><a class="fa fa-twitter hasTooltip"
-														                        href="#" title="Twitter"></a>
-														</li>
-														<li class="item-151"><a class="fa fa-skype hasTooltip" href="#"
-														                        title="Skype"></a>
-														</li>
-														<li class="item-149"><a class="fa fa-google-plus hasTooltip"
-														                        href="#" title="Google+"></a>
-														</li>
-														<li class="item-152"><a class="fa fa-instagram hasTooltip"
-														                        href="#" title="Instagram"></a>
-														</li>
-														<li class="item-280"><a class="fa fa-vimeo-square hasTooltip"
-														                        href="#" title="Vimeo"></a>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="moduletable contact-form  span6">
-							<div class="module_container">
-								<header><h3 class="moduleTitle "><span
-												class="item_title_part0 item_title_part_odd item_title_part_first_half item_title_part_first">Get</span>
-										<span class="item_title_part1 item_title_part_even item_title_part_first_half">in</span>
-										<span class="item_title_part2 item_title_part_odd item_title_part_second_half">touch</span>
-									</h3></header>
-								<div id="contact_189">
-									<form class="mod_tm_ajax_contact_form" id="contact-form_189" novalidate>
-										<input type="hidden" id="module_id" name="module_id" value="189">
-										<div class="mod_tm_ajax_contact_form_message" id="message_189">
-											<span class="s">Thank You! Your message has been sent.</span>
-											<span class="e">Something went wrong, please try again later.</span>
-											<span class="c">Please enter a correct Captcha answer.</span>
-										</div>
-										<fieldset>
-											<div class="row-fluid">
-												<div class="control-group control-group-input span6">
-													<div class="controls"><input type="text" placeholder="Name:"
-													                             name="name" id="name_0"
-													                             class="mod_tm_ajax_contact_form_text hasTooltip"
-													                             required title="Name:"></div>
-												</div>
-												<div class="control-group control-group-input span6">
-													<div class="controls"><input type="email" placeholder="Email:"
-													                             name="email" id="email_1"
-													                             class="mod_tm_ajax_contact_form_email hasTooltip"
-													                             required title="Email:"></div>
-												</div>
-												<div class="control-group control-group-input span12">
-													<div class="controls"><textarea name="message"
-													                                placeholder="Message:"
-													                                id="message_2"
-													                                class="mod_tm_ajax_contact_form_textarea hasTooltip"
-													                                required
-													                                title="Message:"></textarea></div>
-												</div>                <!-- Submit Button -->
-												<div class="control-group control-group-button span12">
-													<div class="controls">
-														<button type="submit"
-														        class="btn btn-primary mod_tm_ajax_contact_form_btn">
-															Send
-														</button>
-													</div>
-												</div>
-											</div>
-										</fieldset>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Copyright -->
-		<div id="copyright" role="contentinfo">
-			<div class="row-container">
-				<div class="container-fluid">
-					<div class="row-fluid">
-
-						<div class="copyright span12">
-							<span class="siteName">AIO Inspections</span>
-							<span class="copy">&copy;</span> <span class="year">2016</span> <a class="privacy_link"
-							                                                                   rel="license"
-							                                                                   href="pages/privacy-policy.html">Privacy
-							                                                                                                    Policy</a>
-						</div>
-						More <a rel='nofollow'
-						        href='http://www.templatemonster.com/category/web-design-joomla-templates/'
-						        target='_blank'>Web Design Joomla Templates at TemplateMonster.com</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="footer-wrapper-inner">
+        <!-- Footer -->
+      <?php
+      include "footer.html";
+      ?>
+    </div>
 </div>
 <div id="back-top">
-	<a href="#"><span></span> </a>
+    <a href="#"><span></span> </a>
 </div>
-
 
 
 <script src="templates/theme3079/js/jquery.modernizr.min.js"></script>
 <script src="templates/theme3079/js/jquery.stellar.min.js"></script>
 <script>
-	jQuery(function ($) {
-		if (!Modernizr.touch) {
-			$(window).load(function () {
-				$.stellar({responsive: true, horizontalScrolling: false});
-			});
-		}
-	});
+    jQuery(function ($) {
+        if (!Modernizr.touch) {
+            $(window).load(function () {
+                $.stellar({responsive: true, horizontalScrolling: false});
+            });
+        }
+    });
 </script>
 <script src="templates/theme3079/js/jquery.simplr.smoothscroll.min.js"></script>
 <script>
-	jQuery(function ($) {
-		if (!Modernizr.touch) {
-			var platform = navigator.platform.toLowerCase();
-			if (platform.indexOf('win') == 0 || platform.indexOf('linux') == 0) {
-				if ($.browser.webkit) {
-					$.srSmoothscroll({ease: 'easeOutQuart'});
-				}
-			}
-		}
-	});
+    jQuery(function ($) {
+        if (!Modernizr.touch) {
+            var platform = navigator.platform.toLowerCase();
+            if (platform.indexOf('win') == 0 || platform.indexOf('linux') == 0) {
+                if ($.browser.webkit) {
+                    $.srSmoothscroll({ease: 'easeOutQuart'});
+                }
+            }
+        }
+    });
 </script>
 <script src="templates/theme3079/js/jquery.fancybox.pack.js"></script>
 <script src="templates/theme3079/js/jquery.fancybox-buttons.js"></script>

@@ -163,10 +163,10 @@ var Autocompleter = new Class({
             this.options.separatorSplit = this.options.separator;
         }
         this.fx = (!this.options.fxOptions) ? null : new Fx.Tween(this.choices, Object.merge({
-            'property': 'opacity',
-            'link': 'cancel',
-            'duration': 200
-        }, this.options.fxOptions)).addEvent('onStart', Chain.prototype.clearChain).set(0);
+                'property': 'opacity',
+                'link': 'cancel',
+                'duration': 200
+            }, this.options.fxOptions)).addEvent('onStart', Chain.prototype.clearChain).set(0);
         this.element.setProperty('autocomplete', 'off')
             .addEvent((Browser.ie || Browser.safari || Browser.chrome) ? 'keydown' : 'keypress', this.onCommand.bind(this))
             .addEvent('click', this.onCommand.bind(this, [false]))

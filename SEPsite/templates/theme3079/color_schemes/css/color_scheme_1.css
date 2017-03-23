@@ -42,7 +42,7 @@ a {
     color: #00C853;
 }
 
-a:hover, a:focus{
+a:hover, a:focus {
     color: #333333;
 }
 
@@ -55,6 +55,7 @@ a:hover, a:focus{
 .accenttop h5.komento_title {
     color: #ffffff;
 }
+
 h1,
 h2,
 h3,
@@ -133,7 +134,8 @@ h6 {
 }
 
 .collapsed {
-    color: #00C853; !important
+    color: #00C853;
+!important
 }
 
 .body__home #top.fixed {

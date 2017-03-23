@@ -23403,7 +23403,7 @@ table.pricing tbody td:after {
     padding-bottom: 0;
 }
 
-.accordion_style1 .accordion-toggle, .accordion_style1 .accordion-toggle-inner{
+.accordion_style1 .accordion-toggle, .accordion_style1 .accordion-toggle-inner {
     position: relative;
     padding: 16px 42px 16px 22px;
     font-size: 24px;
